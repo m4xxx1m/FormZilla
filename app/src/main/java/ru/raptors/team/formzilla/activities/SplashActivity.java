@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ru.raptors.team.formzilla.LoginActivity;
 import ru.raptors.team.formzilla.R;
 
 public class SplashActivity extends AppCompatActivity {
@@ -13,7 +12,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R.layout.splash_activity);
+        setContentView(R.layout.activity_splash);
         Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();

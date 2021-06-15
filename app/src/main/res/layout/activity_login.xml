@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".activities.LoginActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -80,6 +80,7 @@
 
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/continue_button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:text="Продолжить"
