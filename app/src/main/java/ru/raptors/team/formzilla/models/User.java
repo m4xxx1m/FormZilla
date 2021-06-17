@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import ru.raptors.team.formzilla.enums.Gender;
 import ru.raptors.team.formzilla.interfaces.Action;
@@ -35,22 +36,30 @@ public class User {
     public User generateUser(String firstName, String lastName)
     {
         User result = null;
-
+        result.generateID();
+        result.firstName = firstName;
+        result.lastName = lastName;
         return result;
     }
 
     public void getFormsFromFirebaseAndDoAction(Context context, Action action)
     {
-
+        // получает все доступные и пройденные опросы с Firebase
     }
 
     public void uploadFormsToFirebaseAndDoAction(Context context, Action action)
     {
-
+        // загружает все пройденные формы с результатами на Firebase
     }
 
     public void getFiltersFromFirebaseAndDoAction(Context context, Action action)
     {
+        // получает все доступные фильтры с Firebase
+    }
 
+    private void generateID()
+    {
+        UUID uuid = UUID.randomUUID();
+        ID = uuid.toString();
     }
 }
