@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FormZilla</string>
+    <string name="available_forms">Доступные опросы</string>
+    <string name="enter_login_and_password">Введите логин и пароль</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="next">Продолжить</string>
+    <string name="sign_up">Зарегистрироваться</string>
 </resources>

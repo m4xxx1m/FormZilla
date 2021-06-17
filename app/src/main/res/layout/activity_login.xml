@@ -4,45 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.LoginActivity">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="200dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    tools:context=".activities.LoginActivity"
+    android:paddingVertical="40dp"
+    android:paddingHorizontal="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="Введите\nлогин и пароль"
+                android:layout_marginBottom="40dp"
+                android:text="@string/enter_login_and_password"
                 android:textAlignment="textStart"
                 android:textColor="#000000"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
-                android:text="Чтобы участвовать\nв опросах"
-                android:textAlignment="viewStart"
-                android:textColor="#535353"
-                android:textSize="18sp" />
+
+<!--            <TextView-->
+<!--                android:id="@+id/textView3"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="100dp"-->
+<!--                android:text="Чтобы участвовать в опросах"-->
+<!--                android:textAlignment="viewStart"-->
+<!--                android:textColor="#535353"-->
+<!--                android:textSize="18sp" />-->
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editTextTextLogin"
@@ -54,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="Логин" />
+                    android:hint="@string/login" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -67,15 +63,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:hint="Пароль" />
+                    android:hint="@string/password" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/textView5"
-                android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="Забыли пароль?"
+                android:text="@string/forgot_password"
                 android:textColor="#5390EC" />
 
 
@@ -83,11 +80,16 @@
                 android:id="@+id/continue_button"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:text="Продолжить"
+                android:text="@string/next"
+                android:layout_marginBottom="5dp"
                 app:cornerRadius="12dp" />
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:text="@string/sign_up"
+                android:id="@+id/sign_up" />
 
         </LinearLayout>
-
-    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
