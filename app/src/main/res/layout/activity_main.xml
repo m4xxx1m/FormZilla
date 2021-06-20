@@ -34,27 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/place_holder"
-                android:padding="20dp">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="vertical"
-                    android:clipToPadding="false"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:padding="20dp"/>
         </LinearLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_add_white_24dp"
-            tools:ignore="ContentDescription" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

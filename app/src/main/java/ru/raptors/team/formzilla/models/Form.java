@@ -7,21 +7,34 @@ import java.util.UUID;
 
 import ru.raptors.team.formzilla.enums.FormStatus;
 import ru.raptors.team.formzilla.interfaces.Action;
+import ru.raptors.team.formzilla.interfaces.Saveable;
 
-public class Form {
+public class Form implements Saveable {
     private String ID;
     private FormStatus status;
+    public String title;
     public ArrayList<Question> questions;
     public ArrayList<User> staff;
     public ArrayList<UserAnswer> userAnswers;
 
     public Form()
     {
-        generateID();
+        ID = Helper.generateID();
     }
 
-    public Form(ArrayList<Question> questions) {
+    public Form(String ID) {
+        this.ID = ID;
+    }
+
+    public Form(String ID, FormStatus status, String title) {
+        this.ID = ID;
+        this.status = status;
+        this.title = title;
+    }
+
+    public Form(String title, ArrayList<Question> questions) {
         this();
+        this.title = title;
         this.questions = questions;
     }
 
@@ -36,9 +49,21 @@ public class Form {
         // потом метод получает сотрудников, у которых есть форма с такой же ID и статусом passed
     }
 
-    private void generateID()
+    public void save(Context context)
     {
-        UUID uuid = UUID.randomUUID();
-        ID = uuid.toString();
+
+    }
+
+    public void loadFromPhone(Context context)
+    {
+
+    }
+
+    public FormStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(FormStatus status) {
+        this.status = status;
     }
 }

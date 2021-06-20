@@ -1,5 +1,5 @@
 package ru.raptors.team.formzilla.interfaces;
 
 public interface OnAnsweredListener {
-    void onAnswered(String answer);
+    void onAnswered(String answer, String userID);
 }

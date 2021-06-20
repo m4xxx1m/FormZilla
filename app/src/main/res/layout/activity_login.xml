@@ -22,7 +22,7 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/enter_login_and_password"
                 android:textAlignment="textStart"
                 android:textColor="#000000"
@@ -39,6 +39,16 @@
 <!--                android:textAlignment="viewStart"-->
 <!--                android:textColor="#535353"-->
 <!--                android:textSize="18sp" />-->
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:text="@string/enter_login_and_password_subscription"
+                android:textAlignment="textStart"
+                android:textColor="#676767"
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editTextTextLogin"

@@ -1,29 +1,62 @@
 package ru.raptors.team.formzilla.models;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 
 import ru.raptors.team.formzilla.enums.QuestionType;
 import ru.raptors.team.formzilla.interfaces.OnAnsweredListener;
+import ru.raptors.team.formzilla.interfaces.Saveable;
 
-public abstract class Question {
-    String question;
-    QuestionType questionType;
-    ArrayList<OnAnsweredListener> onAnsweredListeners;
+public abstract class Question implements Saveable {
+    public String question;
+    public QuestionType questionType;
+    public ArrayList<OnAnsweredListener> onAnsweredListeners;
 
     public Question() {
         this.onAnsweredListeners = new ArrayList<OnAnsweredListener>();
     }
 
-    void setOnAnsweredListener(OnAnsweredListener onAnsweredListener)
+    public void addOnAnsweredListenerCreateFilter(String filterCategory, User user)
     {
-        this.onAnsweredListeners.add(onAnsweredListener);
+
     }
 
-    void onAnswered(String answer)
+    public void callListeners(String answer, String userID)
     {
         for(OnAnsweredListener onAnsweredListener : onAnsweredListeners)
         {
-            onAnsweredListener.onAnswered(answer);
+            onAnsweredListener.onAnswered(answer, userID);
         }
+    }
+
+    public void save(Context context)
+    {
+
+    }
+
+    public void loadFromPhone(Context context)
+    {
+
+    }
+
+    public String packOnAnsweredListeners()
+    {
+        String result = "";
+        for(OnAnsweredListener onAnsweredListener : onAnsweredListeners)
+        {
+            result += onAnsweredListener.toString();
+        }
+        return result;
+    }
+
+    public void unpackOnAnsweredListeners(String pack)
+    {
+
+    }
+
+    private void addOnAnsweredListener(OnAnsweredListener onAnsweredListener)
+    {
+        this.onAnsweredListeners.add(onAnsweredListener);
     }
 }
