@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1087066672701",
+    "firebase_url": "https://formzilla-4910e-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "formzilla-4910e",
+    "storage_bucket": "formzilla-4910e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087066672701:android:11cbb7b376159a2fdda454",
+        "android_client_info": {
+          "package_name": "ru.raptors.team.formzilla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1087066672701-lqm7cftc7caceg469nmsk8crj6r3p2jp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKzHsdWj9kHnGDthDI_Y6q_yTJSyI_rOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1087066672701-lqm7cftc7caceg469nmsk8crj6r3p2jp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

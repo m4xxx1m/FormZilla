@@ -2,6 +2,8 @@ package ru.raptors.team.formzilla.models;
 
 import android.content.Context;
 
+import com.google.firebase.database.DataSnapshot;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -38,6 +40,10 @@ public class Form implements Saveable {
         this.questions = questions;
     }
 
+    public Form(DataSnapshot dataForm) {
+        //Todo: Конструктор из DataSnapshot
+    }
+
     public void sendToStaff()
     {
         // здесь форма должна отправляться всем сотрудникам. которые указаны в staff
@@ -65,5 +71,9 @@ public class Form implements Saveable {
 
     public void setStatus(FormStatus status) {
         this.status = status;
+    }
+
+    public String getID() {
+        return ID;
     }
 }

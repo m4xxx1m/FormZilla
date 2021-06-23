@@ -2,6 +2,14 @@ package ru.raptors.team.formzilla.models;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -51,9 +59,30 @@ public class User implements Saveable {
         return result;
     }
 
+    // получает все доступные и пройденные опросы с Firebase
     public void getFormsFromFirebaseAndDoAction(Context context, Action action)
     {
-        // получает все доступные и пройденные опросы с Firebase
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Forms");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for(DataSnapshot dataViolationReport : snapshot.getChildren())
+                    {
+                        Form form = new Form(dataViolationReport);
+                        Form existForm = findFormByID(form.getID());
+                        if(existForm == null)
+                        {
+                            forms.add(form);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     public void uploadFormsToFirebaseAndDoAction(Context context, Action action)
@@ -76,9 +105,23 @@ public class User implements Saveable {
 
     }
 
+    public void saveInFirebase(Context context)
+    {
+
+    }
+
     public void loadFromPhone(Context context)
     {
 
+    }
+
+    private Form findFormByID(String ID)
+    {
+        for (Form form : forms)
+        {
+            if(form.getID().equals(ID)) return form;
+        }
+        return null;
     }
 
     public boolean hasFilter(Filter filter)
