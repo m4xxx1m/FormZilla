@@ -4,26 +4,20 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
-public class SingleAnswerQuestion extends MultipleQuestion {
-    public String selectedAnswer;
+public class TextQuestion extends Question {
+    public String answer;
 
-    public SingleAnswerQuestion(ArrayList<String> answers) {
-        super(answers);
+    public TextQuestion(String answer) {
+        this.answer = answer;
     }
 
-    public SingleAnswerQuestion(DataSnapshot dataSnapshot) {
+    public TextQuestion(DataSnapshot dataSnapshot) {
         super();
         if(dataSnapshot.hasChild("Question")) question = dataSnapshot.child("Question").getValue(String.class);
         if(dataSnapshot.hasChild("Type")) questionType = new QuestionType(dataSnapshot.child("Type").getValue(String.class)).questionTypeEnum;
-        ArrayList<String> answers = new ArrayList<String>();
-        for(DataSnapshot answer : dataSnapshot.child("Answers").getChildren())
-        {
-            answers.add(answer.getValue(String.class));
-        }
-        this.answers = answers;
         if(dataSnapshot.hasChild("UserAnswers")) {
             String userAnswer = dataSnapshot.child("UserAnswers").getChildren().iterator().next().getValue(String.class);
-            selectedAnswer = userAnswer;
+            answer = userAnswer;
         }
     }
 }

@@ -4,13 +4,13 @@ import android.content.Context;
 
 import java.util.ArrayList;
 
-import ru.raptors.team.formzilla.enums.QuestionType;
+import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.OnAnsweredListener;
 import ru.raptors.team.formzilla.interfaces.Saveable;
 
-public abstract class Question implements Saveable {
+public class Question implements Saveable {
     public String question;
-    public QuestionType questionType;
+    public QuestionTypeEnum questionType;
     public ArrayList<OnAnsweredListener> onAnsweredListeners;
 
     public Question() {

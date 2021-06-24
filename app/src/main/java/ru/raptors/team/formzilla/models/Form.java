@@ -5,15 +5,15 @@ import android.content.Context;
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
-import ru.raptors.team.formzilla.enums.FormStatus;
+import ru.raptors.team.formzilla.enums.FormStatusEnum;
+import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.Action;
 import ru.raptors.team.formzilla.interfaces.Saveable;
 
 public class Form implements Saveable {
     private String ID;
-    private FormStatus status;
+    private FormStatusEnum status;
     public String title;
     public ArrayList<Question> questions;
     public ArrayList<User> staff;
@@ -28,7 +28,7 @@ public class Form implements Saveable {
         this.ID = ID;
     }
 
-    public Form(String ID, FormStatus status, String title) {
+    public Form(String ID, FormStatusEnum status, String title) {
         this.ID = ID;
         this.status = status;
         this.title = title;
@@ -40,13 +40,42 @@ public class Form implements Saveable {
         this.questions = questions;
     }
 
-    public Form(DataSnapshot dataForm) {
-        //Todo: Конструктор из DataSnapshot
+    public Form(DataSnapshot dataSnapshot) {
+        this();
+        ID = dataSnapshot.getKey();
+        if(dataSnapshot.hasChild("Status")) setStatus(new FormStatus(dataSnapshot.child("Status").getValue(String.class)).getFormStatus());
+        if(dataSnapshot.hasChild("Questions"))
+        {
+            DataSnapshot dataQuestions = dataSnapshot.child("Questions");
+            for(DataSnapshot question : dataQuestions.getChildren())
+            {
+                QuestionTypeEnum questionType = new QuestionType(question.child("Type").getValue(String.class)).questionTypeEnum;
+                switch (questionType)
+                {
+                    case SingleAnswer:
+                    {
+                        questions.add(new SingleAnswerQuestion(question));
+                        break;
+                    }
+                    case MultiAnswer:
+                    {
+                        questions.add(new MultiAnswersQuestion(question));
+                        break;
+                    }
+                    case TextAnswer:
+                    {
+                        questions.add(new TextQuestion(question));
+                        break;
+                    }
+                }
+            }
+        }
     }
 
+    // здесь форма должна отправляться всем сотрудникам. которые указаны в staff
     public void sendToStaff()
     {
-        // здесь форма должна отправляться всем сотрудникам. которые указаны в staff
+
     }
 
     public void getStaffAnswersAndDoAction(Context context, Action action)
@@ -65,11 +94,11 @@ public class Form implements Saveable {
 
     }
 
-    public FormStatus getStatus() {
+    public FormStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(FormStatus status) {
+    public void setStatus(FormStatusEnum status) {
         this.status = status;
     }
 

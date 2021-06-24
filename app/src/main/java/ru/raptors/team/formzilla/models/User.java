@@ -10,12 +10,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.UUID;
 
-import ru.raptors.team.formzilla.enums.FormStatus;
-import ru.raptors.team.formzilla.enums.Gender;
+import ru.raptors.team.formzilla.enums.FormStatusEnum;
+import ru.raptors.team.formzilla.enums.GenderEnum;
 import ru.raptors.team.formzilla.interfaces.Action;
 import ru.raptors.team.formzilla.interfaces.Saveable;
 
@@ -23,7 +21,7 @@ public class User implements Saveable {
     private String ID;
     private String login;
     private String password;
-    private Gender gender;
+    private GenderEnum gender;
     private String firstName;
     private String lastName;
     private String company;
@@ -67,9 +65,9 @@ public class User implements Saveable {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    for(DataSnapshot dataViolationReport : snapshot.getChildren())
+                    for(DataSnapshot dataForm : snapshot.getChildren())
                     {
-                        Form form = new Form(dataViolationReport);
+                        Form form = new Form(dataForm);
                         Form existForm = findFormByID(form.getID());
                         if(existForm == null)
                         {
@@ -85,9 +83,56 @@ public class User implements Saveable {
         });
     }
 
-    public void uploadFormsToFirebaseAndDoAction(Context context, Action action)
+    // загружает все пройденные формы с результатами на Firebase
+    public void uploadPassedFormsToFirebaseAndDoAction(Context context, Action action)
     {
-        // загружает все пройденные формы с результатами на Firebase
+        for(Form form : forms)
+        {
+            if(form.getStatus() == FormStatusEnum.Passed) {
+                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+                DatabaseReference formReference = firebaseDatabase.getReference("Accounts").child(ID).child("Forms").child(form.getID());
+                DatabaseReference databaseReference = formReference.child("Status");
+                FormStatus status = new FormStatus(form.getStatus());
+                databaseReference.setValue(status.toString());
+                for(int i = 0; i < form.questions.size(); i++)
+                {
+                    Question question = form.questions.get(i);
+                    DatabaseReference questionReference = formReference.child("Questions").child(Integer.toString(i));
+                    databaseReference = questionReference.child("Question");
+                    databaseReference.setValue(question.question);
+                    databaseReference = questionReference.child("Type");
+                    QuestionType questionType = new QuestionType(question.questionType);
+                    databaseReference.setValue(questionType.toString());
+                    switch (question.questionType)
+                    {
+                        case SingleAnswer:
+                        {
+                            SingleAnswerQuestion singleAnswerQuestion = (SingleAnswerQuestion) question;
+                            databaseReference = questionReference.child("UserAnswers").child("Answer");
+                            databaseReference.setValue(singleAnswerQuestion.selectedAnswer);
+                            break;
+                        }
+                        case MultiAnswer:
+                        {
+                            MultiAnswersQuestion multiAnswersQuestion = (MultiAnswersQuestion) question;
+                            for(int j = 0 ; j < multiAnswersQuestion.selectedAnswers.size() ; j++)
+                            {
+                                databaseReference = questionReference.child("UserAnswers").child(Integer.toString(j));
+                                databaseReference.setValue(multiAnswersQuestion.selectedAnswers.get(j));
+                            }
+                            break;
+                        }
+                        case TextAnswer:
+                        {
+                            TextQuestion textQuestion = (TextQuestion) question;
+                            databaseReference = questionReference.child("UserAnswers").child("Answer");
+                            databaseReference.setValue(textQuestion.answer);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void getFiltersFromFirebaseAndDoAction(Context context, Action action)
@@ -150,7 +195,7 @@ public class User implements Saveable {
         ArrayList<Form> result = new ArrayList<Form>();
         for(Form form : forms)
         {
-            if(form.getStatus() == FormStatus.Available) result.add(form);
+            if(form.getStatus() == FormStatusEnum.Available) result.add(form);
         }
         return result;
     }
@@ -159,7 +204,7 @@ public class User implements Saveable {
         ArrayList<Form> result = new ArrayList<Form>();
         for(Form form : forms)
         {
-            if(form.getStatus() == FormStatus.Passed) result.add(form);
+            if(form.getStatus() == FormStatusEnum.Passed) result.add(form);
         }
         return result;
     }
@@ -168,7 +213,7 @@ public class User implements Saveable {
         ArrayList<Form> result = new ArrayList<Form>();
         for(Form form : forms)
         {
-            if(form.getStatus() == FormStatus.Created) result.add(form);
+            if(form.getStatus() == FormStatusEnum.Created) result.add(form);
         }
         return result;
     }
