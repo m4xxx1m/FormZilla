@@ -137,27 +137,43 @@ public class User implements Saveable {
 
     public void getFiltersFromFirebaseAndDoAction(Context context, Action action)
     {
-        // получает все доступные фильтры с Firebase
+        // Todo: получает все доступные фильтры с Firebase
     }
 
     public void uploadFiltersOnFirebase(Context context)
     {
-
+        // Todo: загружает все фильтры на Firebase
     }
 
     public void save(Context context)
     {
-
+        // Todo: сохраняет данные пользователя на смартфоне в SQLite
     }
 
     public void saveInFirebase(Context context)
     {
-
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference accountReference = firebaseDatabase.getReference("Accounts").child(ID);
+        DatabaseReference databaseReference;
+        databaseReference = accountReference.child("Login");
+        databaseReference.setValue(login);
+        databaseReference = accountReference.child("Password");
+        databaseReference.setValue(password);
+        databaseReference = accountReference.child("FirstName");
+        databaseReference.setValue(firstName);
+        databaseReference = accountReference.child("LastName");
+        databaseReference.setValue(lastName);
+        databaseReference = accountReference.child("Company");
+        databaseReference.setValue(company);
+        databaseReference = accountReference.child("CompanyID");
+        databaseReference.setValue(companyID);
+        databaseReference = accountReference.child("Gender");
+        databaseReference.setValue(new Gender(gender).getGender());
     }
 
     public void loadFromPhone(Context context)
     {
-
+        // Todo: загружает информацию о пользователе с SQLite
     }
 
     private Form findFormByID(String ID)
@@ -174,8 +190,9 @@ public class User implements Saveable {
         boolean result = false;
         for(Filter userFilter : filters)
         {
-            if(userFilter.category.equals(filter.category)
-            && userFilter.filter.equals(filter.filter))
+            if(userFilter.ID.equals(filter.ID)
+                    && userFilter.category.equals(filter.category)
+                    && userFilter.filter.equals(filter.filter))
             {
                 result = true;
             }
@@ -183,11 +200,33 @@ public class User implements Saveable {
         return result;
     }
 
+    public Filter findFilterByID(String ID)
+    {
+        Filter result = null;
+        for(Filter userFilter : filters)
+        {
+            if(userFilter.ID.equals(ID))
+            {
+                result = userFilter;
+                break;
+            }
+        }
+        return result;
+    }
+
+
     public void addFilter(Filter filter)
     {
         if(!hasFilter(filter)) filters.add(filter);
         else {
-            //Todo: что делать, если такой фильтр уже есть?
+            Filter existFilter = findFilterByID(filter.ID);
+            for(User staffUser : filter.staff)
+            {
+                if(!existFilter.hasUserInStaff(staffUser))
+                {
+                    existFilter.staff.add(staffUser);
+                }
+            }
         }
     }
 

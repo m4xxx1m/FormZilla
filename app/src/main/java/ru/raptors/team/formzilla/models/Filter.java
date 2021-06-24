@@ -38,8 +38,22 @@ public class Filter {
 
     public void getStaffAndDoAction(Context context, Action action)
     {
-        // метод получает всех пользователей, которые подходят под этот фильтр, с Firebase
+        // Todo: метод получает всех пользователей, которые подходят под этот фильтр, с Firebase
         // (!он не должен перебирать пользователей)
         // (в firebase создаётся string название фильтра и все пользователи, которые под него подходят)
+    }
+
+    public boolean hasUserInStaff(User user)
+    {
+        boolean result = false;
+        for(User userInStaff : staff)
+        {
+            if(user.getID().equals(userInStaff.getID()))
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 }

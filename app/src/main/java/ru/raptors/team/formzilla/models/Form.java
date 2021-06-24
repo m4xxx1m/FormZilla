@@ -72,23 +72,26 @@ public class Form implements Saveable {
         }
     }
 
-    // здесь форма должна отправляться всем сотрудникам. которые указаны в staff
+    // Todo: здесь форма должна отправляться всем сотрудникам. которые указаны в staff
     public void sendToStaff()
     {
 
     }
 
+    //  Todo: здесь должны перебираться все сотрудники в Firebase, в том чиле и их наследники.
+    // потом метод получает сотрудников, у которых есть форма с такой же ID и статусом passed
     public void getStaffAnswersAndDoAction(Context context, Action action)
     {
-        // здесь должны перебираться все сотрудники в Firebase, в том чиле и их наследники.
-        // потом метод получает сотрудников, у которых есть форма с такой же ID и статусом passed
+
     }
 
+    //  Todo: сохраняет форму в SQLite
     public void save(Context context)
     {
 
     }
 
+    //  Todo: загружает форму из SQLite
     public void loadFromPhone(Context context)
     {
 
