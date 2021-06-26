@@ -12,6 +12,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import ru.raptors.team.formzilla.databases.FormsDatabase;
+import ru.raptors.team.formzilla.databases.UsersDatabase;
 import ru.raptors.team.formzilla.enums.FormStatusEnum;
 import ru.raptors.team.formzilla.enums.GenderEnum;
 import ru.raptors.team.formzilla.interfaces.Action;
@@ -147,7 +149,9 @@ public class User implements Saveable {
 
     public void save(Context context)
     {
-        // Todo: сохраняет данные пользователя на смартфоне в SQLite
+        UsersDatabase usersDatabase;
+        usersDatabase = new UsersDatabase(context);
+        usersDatabase.update(this);
     }
 
     public void saveInFirebase(Context context)
@@ -173,7 +177,17 @@ public class User implements Saveable {
 
     public void loadFromPhone(Context context)
     {
-        // Todo: загружает информацию о пользователе с SQLite
+        UsersDatabase usersDatabase;
+        usersDatabase = new UsersDatabase(context);
+        User user = usersDatabase.select(ID);
+        this.gender = user.gender;
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.company = user.getCompany();
+        this.companyID = user.getCompanyID();
+        this.forms = user.forms;
+        this.staff = user.staff;
+        this.filters = user.filters;
     }
 
     private Form findFormByID(String ID)
@@ -230,6 +244,67 @@ public class User implements Saveable {
         }
     }
 
+    public String packStaff()
+    {
+        String result = "";
+        for(User user : staff)
+        {
+            result += user.getID() + " ";
+        }
+        return result;
+    }
+
+    public void unpackStaff(String pack)
+    {
+        String[] unpackedStaffID = pack.split(" ");
+        for(String unpackedUserID : unpackedStaffID)
+        {
+            staff.add(new User(unpackedUserID));
+        }
+    }
+
+    public String packForms()
+    {
+        String result = "";
+        for(Form form : forms)
+        {
+            result += form.getID() + " ";
+        }
+        return result;
+    }
+
+    public void unpackForms(String pack, Context context)
+    {
+        String[] unpackedFormsIDs = pack.split(" ");
+        for(String unpackedFormID : unpackedFormsIDs)
+        {
+            Form form = new Form(unpackedFormID);
+            form.loadFromPhone(context);
+            forms.add(form);
+        }
+    }
+
+    public String packFilters()
+    {
+        String result = "";
+        for(Filter filter : filters)
+        {
+            result += filter.ID + " ";
+        }
+        return result;
+    }
+
+    public void unpackFilters(String pack, Context context)
+    {
+        String[] unpackedFiltersIDs = pack.split(" ");
+        for(String unpackedFilterID : unpackedFiltersIDs)
+        {
+            Filter filter = new Filter(unpackedFilterID);
+            filter.loadFromPhone(context);
+            filters.add(filter);
+        }
+    }
+
     public ArrayList<Form> getAvailableForms() {
         ArrayList<Form> result = new ArrayList<Form>();
         for(Form form : forms)
@@ -263,5 +338,45 @@ public class User implements Saveable {
 
     public ArrayList<Form> getForms() {
         return forms;
+    }
+
+    public GenderEnum getGender() {
+        return gender;
+    }
+
+    public void setGender(GenderEnum gender) {
+        this.gender = gender;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getCompanyID() {
+        return companyID;
+    }
+
+    public void setCompanyID(String companyID) {
+        this.companyID = companyID;
     }
 }
