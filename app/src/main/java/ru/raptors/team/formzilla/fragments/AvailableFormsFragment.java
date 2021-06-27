@@ -64,7 +64,7 @@ public class AvailableFormsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        User nowUser = User.getNowUser();
+        User nowUser = User.getNowUser(getContext());
         if(nowUser != null) {
             ArrayList<Form> availableForms = nowUser.getAvailableForms();
             AvailableFormAdapter availableFormAdapter = new AvailableFormAdapter(getContext(), availableForms);

@@ -13,6 +13,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import ru.raptors.team.formzilla.databases.FormsDatabase;
+import ru.raptors.team.formzilla.databases.NowUserDatabase;
 import ru.raptors.team.formzilla.databases.UsersDatabase;
 import ru.raptors.team.formzilla.enums.FormStatusEnum;
 import ru.raptors.team.formzilla.enums.GenderEnum;
@@ -43,10 +44,19 @@ public class User implements Saveable {
         this.companyID = companyID;
     }
 
-    public static User getNowUser()
+    public static User getNowUser(Context context)
     {
         User result = null;
+        NowUserDatabase nowUserDatabase;
+        nowUserDatabase = new NowUserDatabase(context);
+        result = nowUserDatabase.select();
+        return result;
+    }
 
+    public static User loadUserFromFirebase(String login, String password)
+    {
+        User result = null;
+        // Todo: метод загружает данные о пользователе по логину и паролю, если пароль или логин не совпадает, то возвращает null
         return result;
     }
 
@@ -86,51 +96,53 @@ public class User implements Saveable {
     }
 
     // загружает все пройденные формы с результатами на Firebase
-    public void uploadPassedFormsToFirebaseAndDoAction(Context context, Action action)
+    public void uploadPassedFormsToFirebase()
     {
         for(Form form : forms)
         {
             if(form.getStatus() == FormStatusEnum.Passed) {
-                FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-                DatabaseReference formReference = firebaseDatabase.getReference("Accounts").child(ID).child("Forms").child(form.getID());
-                DatabaseReference databaseReference = formReference.child("Status");
-                FormStatus status = new FormStatus(form.getStatus());
-                databaseReference.setValue(status.toString());
-                for(int i = 0; i < form.questions.size(); i++)
-                {
-                    Question question = form.questions.get(i);
-                    DatabaseReference questionReference = formReference.child("Questions").child(Integer.toString(i));
-                    databaseReference = questionReference.child("Question");
-                    databaseReference.setValue(question.question);
-                    databaseReference = questionReference.child("Type");
-                    QuestionType questionType = new QuestionType(question.questionType);
-                    databaseReference.setValue(questionType.toString());
-                    switch (question.questionType)
-                    {
-                        case SingleAnswer:
-                        {
-                            SingleAnswerQuestion singleAnswerQuestion = (SingleAnswerQuestion) question;
-                            databaseReference = questionReference.child("UserAnswers").child("Answer");
-                            databaseReference.setValue(singleAnswerQuestion.selectedAnswer);
-                            break;
+                uploadFormToFirebase(form);
+            }
+        }
+    }
+
+    public void uploadFormToFirebase(Form form)
+    {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference formReference = firebaseDatabase.getReference("Accounts").child(ID).child("Forms").child(form.getID());
+        DatabaseReference databaseReference = formReference.child("Status");
+        FormStatus status = new FormStatus(form.getStatus());
+        databaseReference.setValue(status.toString());
+        for(int i = 0; i < form.questions.size(); i++)
+        {
+            Question question = form.questions.get(i);
+            DatabaseReference questionReference = formReference.child("Questions").child(Integer.toString(i));
+            databaseReference = questionReference.child("Question");
+            databaseReference.setValue(question.question);
+            databaseReference = questionReference.child("Type");
+            QuestionType questionType = new QuestionType(question.questionType);
+            databaseReference.setValue(questionType.toString());
+            if(form.getStatus() == FormStatusEnum.Passed) {
+                switch (question.questionType) {
+                    case SingleAnswer: {
+                        SingleAnswerQuestion singleAnswerQuestion = (SingleAnswerQuestion) question;
+                        databaseReference = questionReference.child("UserAnswers").child("Answer");
+                        databaseReference.setValue(singleAnswerQuestion.selectedAnswer);
+                        break;
+                    }
+                    case MultiAnswer: {
+                        MultiAnswersQuestion multiAnswersQuestion = (MultiAnswersQuestion) question;
+                        for (int j = 0; j < multiAnswersQuestion.selectedAnswers.size(); j++) {
+                            databaseReference = questionReference.child("UserAnswers").child(Integer.toString(j));
+                            databaseReference.setValue(multiAnswersQuestion.selectedAnswers.get(j));
                         }
-                        case MultiAnswer:
-                        {
-                            MultiAnswersQuestion multiAnswersQuestion = (MultiAnswersQuestion) question;
-                            for(int j = 0 ; j < multiAnswersQuestion.selectedAnswers.size() ; j++)
-                            {
-                                databaseReference = questionReference.child("UserAnswers").child(Integer.toString(j));
-                                databaseReference.setValue(multiAnswersQuestion.selectedAnswers.get(j));
-                            }
-                            break;
-                        }
-                        case TextAnswer:
-                        {
-                            TextQuestion textQuestion = (TextQuestion) question;
-                            databaseReference = questionReference.child("UserAnswers").child("Answer");
-                            databaseReference.setValue(textQuestion.answer);
-                            break;
-                        }
+                        break;
+                    }
+                    case TextAnswer: {
+                        TextQuestion textQuestion = (TextQuestion) question;
+                        databaseReference = questionReference.child("UserAnswers").child("Answer");
+                        databaseReference.setValue(textQuestion.answer);
+                        break;
                     }
                 }
             }
