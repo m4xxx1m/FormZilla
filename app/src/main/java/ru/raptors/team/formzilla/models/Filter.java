@@ -5,9 +5,14 @@ import android.content.Context;
 import java.io.File;
 import java.util.ArrayList;
 
+import ru.raptors.team.formzilla.databases.FiltersDatabase;
+import ru.raptors.team.formzilla.databases.QuestionsDatabase;
+import ru.raptors.team.formzilla.enums.OnAnsweredListenerEnum;
 import ru.raptors.team.formzilla.interfaces.Action;
+import ru.raptors.team.formzilla.interfaces.OnAnsweredListener;
+import ru.raptors.team.formzilla.interfaces.Saveable;
 
-public class Filter {
+public class Filter implements Saveable {
     public String ID;
     public String filter;
     public String category;
@@ -55,5 +60,41 @@ public class Filter {
             }
         }
         return result;
+    }
+
+    public void save(Context context)
+    {
+        FiltersDatabase filtersDatabase;
+        filtersDatabase = new FiltersDatabase(context);
+        filtersDatabase.update(this);
+    }
+
+    public void loadFromPhone(Context context)
+    {
+        FiltersDatabase filtersDatabase;
+        filtersDatabase = new FiltersDatabase(context);
+        Filter filter = filtersDatabase.select(ID);
+        this.filter = filter.filter;
+        this.category = filter.category;
+        this.staff = filter.staff;
+    }
+
+    public String packStaff()
+    {
+        String result = "";
+        for(User user : staff)
+        {
+            result += user.getID() + " ";
+        }
+        return result;
+    }
+
+    public void unpackStaff(String pack)
+    {
+        String[] unpackedStaffID = pack.split(" ");
+        for(String unpackedUserID : unpackedStaffID)
+        {
+            staff.add(new User(unpackedUserID));
+        }
     }
 }

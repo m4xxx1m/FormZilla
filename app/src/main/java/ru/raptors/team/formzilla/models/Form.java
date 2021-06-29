@@ -6,6 +6,8 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
+import ru.raptors.team.formzilla.databases.FormsDatabase;
+import ru.raptors.team.formzilla.databases.QuestionsDatabase;
 import ru.raptors.team.formzilla.enums.FormStatusEnum;
 import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.Action;
@@ -17,7 +19,7 @@ public class Form implements Saveable {
     public String title;
     public ArrayList<Question> questions;
     public ArrayList<User> staff;
-    public ArrayList<UserAnswer> userAnswers;
+    private ArrayList<UserAnswer> userAnswers;
 
     public Form()
     {
@@ -85,16 +87,62 @@ public class Form implements Saveable {
 
     }
 
-    //  Todo: сохраняет форму в SQLite
     public void save(Context context)
     {
-
+        FormsDatabase formsDatabase;
+        formsDatabase = new FormsDatabase(context);
+        formsDatabase.update(this);
     }
 
-    //  Todo: загружает форму из SQLite
     public void loadFromPhone(Context context)
     {
+        FormsDatabase formsDatabase;
+        formsDatabase = new FormsDatabase(context);
+        Form form = formsDatabase.select(ID);
+        this.status = form.status;
+        this.title = form.title;
+        this.questions = form.questions;
+        this.staff = form.staff;
+    }
 
+    public String packQuestions()
+    {
+        String result = "";
+        for(Question question : questions)
+        {
+            result += question.getID() + " ";
+        }
+        return result;
+    }
+
+    public void unpackQuestions(String pack, Context context)
+    {
+        String[] unpackedQuestionsIDs = pack.split(" ");
+        for(String unpackedQuestionID : unpackedQuestionsIDs)
+        {
+            Question question = new Question(unpackedQuestionID);
+            question.loadFromPhone(context);
+            questions.add(question);
+        }
+    }
+
+    public String packStaff()
+    {
+        String result = "";
+        for(User user : staff)
+        {
+            result += user.getID() + " ";
+        }
+        return result;
+    }
+
+    public void unpackStaff(String pack)
+    {
+        String[] unpackedStaffID = pack.split(" ");
+        for(String unpackedUserID : unpackedStaffID)
+        {
+            staff.add(new User(unpackedUserID));
+        }
     }
 
     public FormStatusEnum getStatus() {

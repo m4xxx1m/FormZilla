@@ -5,18 +5,27 @@ import android.content.Context;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import ru.raptors.team.formzilla.databases.FormsDatabase;
+import ru.raptors.team.formzilla.databases.QuestionsDatabase;
 import ru.raptors.team.formzilla.enums.OnAnsweredListenerEnum;
 import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.OnAnsweredListener;
 import ru.raptors.team.formzilla.interfaces.Saveable;
 
 public class Question implements Saveable {
+    private String ID;
     public String question;
     public QuestionTypeEnum questionType;
     public ArrayList<OnAnsweredListener> onAnsweredListeners;
 
     public Question() {
+        ID = Helper.generateID();
         this.onAnsweredListeners = new ArrayList<OnAnsweredListener>();
+    }
+
+    public Question(String ID) {
+        this();
+        this.ID = ID;
     }
 
     public void addOnAnsweredListenerCreateFilter(String filterCategory, User user)
@@ -35,16 +44,21 @@ public class Question implements Saveable {
         }
     }
 
-    //  Todo: сохраняет вопрос в SQLite
     public void save(Context context)
     {
-
+        QuestionsDatabase questionsDatabase;
+        questionsDatabase = new QuestionsDatabase(context);
+        questionsDatabase.update(this);
     }
 
-    //  Todo: загружает вопрос из SQLite
     public void loadFromPhone(Context context)
     {
-
+        QuestionsDatabase questionsDatabase;
+        questionsDatabase = new QuestionsDatabase(context);
+        Question question = questionsDatabase.select(ID);
+        this.question = question.question;
+        this.questionType = question.questionType;
+        this.onAnsweredListeners = question.onAnsweredListeners;
     }
 
     public String packOnAnsweredListeners()
@@ -84,5 +98,9 @@ public class Question implements Saveable {
     private void addOnAnsweredListener(OnAnsweredListener onAnsweredListener)
     {
         this.onAnsweredListeners.add(onAnsweredListener);
+    }
+
+    public String getID() {
+        return ID;
     }
 }
