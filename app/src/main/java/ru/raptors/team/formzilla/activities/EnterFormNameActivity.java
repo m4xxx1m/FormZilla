@@ -9,14 +9,14 @@ import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.fragments.CreatedFormsFragment;
 import ru.raptors.team.formzilla.models.Form;
 
-public class CreateFormActivity extends AppCompatActivity {
+public class EnterFormNameActivity extends AppCompatActivity {
 
     private Form form;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_form);
+        setContentView(R.layout.activity_enter_form_name);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getFormFromPreviousActivity();
     }

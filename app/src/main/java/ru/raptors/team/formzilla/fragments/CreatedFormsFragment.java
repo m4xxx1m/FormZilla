@@ -1,5 +1,6 @@
 package ru.raptors.team.formzilla.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import ru.raptors.team.formzilla.R;
+import ru.raptors.team.formzilla.activities.EnterFormNameActivity;
+import ru.raptors.team.formzilla.models.Form;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +28,8 @@ public class CreatedFormsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    public final static String FORM = "form";
 
     // TODO: Rename and change types of parameters
 
@@ -63,7 +68,10 @@ public class CreatedFormsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // создание формы
+                Form form = new Form();
+                Intent  createFormIntent = new Intent(getActivity(), EnterFormNameActivity.class);
+                createFormIntent.putExtra(FORM, form);
+                startActivity(createFormIntent);
             }
         });
     }

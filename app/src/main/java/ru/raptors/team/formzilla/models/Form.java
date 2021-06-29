@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.firebase.database.DataSnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ru.raptors.team.formzilla.databases.FormsDatabase;
@@ -13,7 +14,7 @@ import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.Action;
 import ru.raptors.team.formzilla.interfaces.Saveable;
 
-public class Form implements Saveable {
+public class Form implements Saveable, Serializable {
     private String ID;
     private FormStatusEnum status;
     public String title;
