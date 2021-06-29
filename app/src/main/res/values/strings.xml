@@ -17,6 +17,8 @@
     <string name="settings">Параметры</string>
     <string name="create_filter_by_answer">Создание фильтра по ответу</string>
     <string name="multiple_answer">Множественный ответ</string>
+    <string name="done">Готово</string>
+    <string name="add_question">Добавить вопрос</string>
     <string name="enterName">Введите название...</string>
     <string name="formName">Название опроса</string>
 </resources>

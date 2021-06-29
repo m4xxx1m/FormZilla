@@ -127,7 +127,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="20dp">
+                android:paddingStart="20dp"
+                android:paddingEnd="0dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -154,30 +155,40 @@
                 android:textAlignment="viewStart" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/create_filter_by_answer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:id="@+id/create_filter_by_answer"
                 android:layout_marginHorizontal="20dp"
                 android:text="@string/create_filter_by_answer"
-                android:textAlignment="viewStart" />
+                android:textAlignment="viewStart"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp">
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/add_question"
+                    app:cornerRadius="12dp"
+                    android:layout_toStartOf="@id/done"
+                    android:text="@string/add_question" />
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="20dp"
+                    app:cornerRadius="12dp"
+                    android:id="@+id/done"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:text="@string/done"/>
+            </RelativeLayout>
 
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp">
-            <com.google.android.material.button.MaterialButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-        </RelativeLayout>
     </LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
