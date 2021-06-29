@@ -63,62 +63,70 @@
                 android:background="@color/gray" />
 
             <LinearLayout
+                android:id="@+id/answers_place_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="20dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp">
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/free_answer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
                     android:text="@string/free_answer"
-                    android:id="@+id/free_answer"
-                    android:textAlignment="viewStart" />
+                    android:textAlignment="viewStart"
+                    android:textSize="18sp" />
 
                 <LinearLayout
+                    android:id="@+id/answers_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:orientation="horizontal">
+
                     <ImageButton
+                        android:id="@+id/delete_answer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/delete_answer"
-                        android:background="@drawable/outline_remove_circle_outline_24"
-                        android:layout_marginEnd="8dp"/>
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/outline_remove_circle_outline_24" />
+
                     <EditText
+                        android:id="@+id/enter_question_answer"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:hint="@string/enter_question_answer"
-                        android:background="@color/fui_transparent"
-                        android:id="@+id/enter_question_answer"
                         android:layout_weight="1"
+                        android:background="@color/fui_transparent"
+                        android:hint="@string/enter_question_answer"
                         android:importantForAutofill="no"
                         android:inputType="text" />
+
                     <ImageButton
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:background="@drawable/outline_add_photo_alternate_24"
-                        android:layout_height="wrap_content" />
+                        android:background="@drawable/outline_add_photo_alternate_24" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/add_answer_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <ImageButton
+                        android:id="@+id/add_answer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/add_answer"
-                        android:background="@drawable/outline_add_circle_outline_24"
-                        android:layout_marginEnd="8dp"/>
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/outline_add_circle_outline_24" />
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
                         android:layout_marginBottom="12dp"
-                        android:text="@string/add_answer" />
+                        android:text="@string/add_answer"
+                        android:textSize="18sp" />
                 </LinearLayout>
 
             </LinearLayout>

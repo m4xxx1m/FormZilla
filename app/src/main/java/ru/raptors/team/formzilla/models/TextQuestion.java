@@ -7,6 +7,9 @@ import java.util.ArrayList;
 public class TextQuestion extends Question {
     public String answer;
 
+    public TextQuestion() {
+    }
+
     public TextQuestion(String answer) {
         this.answer = answer;
     }
