@@ -8,6 +8,13 @@
     <string name="forgot_password">Забыли пароль?</string>
     <string name="next">Продолжить</string>
     <string name="sign_up">Зарегистрироваться</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="form_name">Название опроса</string>
+    <string name="enter_question_name">Введите текст вопроса</string>
+    <string name="enter_question_answer">Введите текст ответа</string>
+    <string name="free_answer">Свободный ответ</string>
+    <string name="add_answer">Добавить ответ</string>
+    <string name="settings">Параметры</string>
+    <string name="create_filter_by_answer">Создание фильтра по ответу</string>
+    <string name="multiple_answer">Множественный ответ</string>
 </resources>
