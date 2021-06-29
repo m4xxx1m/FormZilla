@@ -13,32 +13,32 @@ import java.util.List;
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.models.Form;
 
-public class AvailableFormAdapter extends RecyclerView.Adapter<AvailableFormAdapter.ViewHolder>{
+public class PassedFormsAdapter extends RecyclerView.Adapter<PassedFormsAdapter.ViewHolder>{
 
     private LayoutInflater inflater;
-    private List<Form> availableForms;
+    private List<Form> passedForms;
 
-    public AvailableFormAdapter(Context context, List<Form> availableForms) {
-        this.availableForms = availableForms;
+    public PassedFormsAdapter(Context context, List<Form> passedForms) {
+        this.passedForms = passedForms;
         this.inflater = LayoutInflater.from(context);
     }
     @Override
-    public AvailableFormAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PassedFormsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = inflater.inflate(R.layout.available_form_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(AvailableFormAdapter.ViewHolder holder, int position) {
-        Form form = availableForms.get(position);
+    public void onBindViewHolder(PassedFormsAdapter.ViewHolder holder, int position) {
+        Form form = passedForms.get(position);
         holder.title.setText(form.title);
         holder.questionsCount.setText(Integer.toString(form.questions.size()));
     }
 
     @Override
     public int getItemCount() {
-        return availableForms.size();
+        return passedForms.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -46,8 +46,8 @@ public class AvailableFormAdapter extends RecyclerView.Adapter<AvailableFormAdap
         final TextView questionsCount;
         ViewHolder(View view){
             super(view);
-            title = view.findViewById(R.id.availableFormTitle);
-            questionsCount = view.findViewById(R.id.availableFormQuestionsCount);
+            title = view.findViewById(R.id.createdFormTitle);
+            questionsCount = view.findViewById(R.id.createdFormQuestionsCount);
         }
     }
 }
