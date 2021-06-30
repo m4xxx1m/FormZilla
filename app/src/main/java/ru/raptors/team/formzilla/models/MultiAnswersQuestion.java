@@ -7,6 +7,10 @@ import java.util.ArrayList;
 public class MultiAnswersQuestion extends MultipleQuestion{
     public ArrayList<String> selectedAnswers;
 
+    public MultiAnswersQuestion() {
+        super();
+    }
+
     public MultiAnswersQuestion(ArrayList<String> answers) {
         super(answers);
     }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.CreateFormActivity">
+    tools:context=".activities.CreateQuestionActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -77,41 +77,19 @@
                     android:textAlignment="viewStart"
                     android:textSize="18sp" />
 
+
                 <LinearLayout
                     android:id="@+id/answers_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:id="@+id/delete_answer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/outline_remove_circle_outline_24" />
-
-                    <EditText
-                        android:id="@+id/enter_question_answer"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@color/fui_transparent"
-                        android:hint="@string/enter_question_answer"
-                        android:importantForAutofill="no"
-                        android:inputType="text" />
-
-                    <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/outline_add_photo_alternate_24" />
-                </LinearLayout>
+                    android:orientation="vertical"></LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/add_answer_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:onClick="addAnswer"
                     android:orientation="horizontal">
 
                     <ImageButton
@@ -177,24 +155,27 @@
                 android:padding="20dp">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_question"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:id="@+id/add_question"
-                    app:cornerRadius="12dp"
                     android:layout_toStartOf="@id/done"
-                    android:text="@string/add_question" />
+                    android:onClick="addQuestion"
+                    android:text="@string/add_question"
+                    app:cornerRadius="12dp" />
+
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/done"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:layout_marginStart="20dp"
-                    app:cornerRadius="12dp"
-                    android:id="@+id/done"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:text="@string/done"/>
+                    android:onClick="complete"
+                    android:text="@string/done"
+                    app:cornerRadius="12dp" />
             </RelativeLayout>
 
         </LinearLayout>

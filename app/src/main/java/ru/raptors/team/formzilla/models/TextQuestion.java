@@ -4,13 +4,18 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
+import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
+
 public class TextQuestion extends Question {
     public String answer;
 
     public TextQuestion() {
+        super();
+        questionType = QuestionTypeEnum.TextAnswer;
     }
 
     public TextQuestion(String answer) {
+        this();
         this.answer = answer;
     }
 

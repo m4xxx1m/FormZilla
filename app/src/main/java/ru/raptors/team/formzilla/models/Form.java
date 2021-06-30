@@ -25,6 +25,9 @@ public class Form implements Saveable, Serializable {
     public Form()
     {
         ID = Helper.generateID();
+        questions = new ArrayList<Question>();
+        staff = new ArrayList<User>();
+        userAnswers = new ArrayList<UserAnswer>();
     }
 
     public Form(String ID) {

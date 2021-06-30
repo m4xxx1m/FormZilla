@@ -4,11 +4,19 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
+import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
+
 public class SingleAnswerQuestion extends MultipleQuestion {
     public String selectedAnswer;
 
+    public SingleAnswerQuestion()
+    {
+        questionType = QuestionTypeEnum.SingleAnswer;
+    }
+
     public SingleAnswerQuestion(ArrayList<String> answers) {
         super(answers);
+        questionType = QuestionTypeEnum.SingleAnswer;
     }
 
     public SingleAnswerQuestion(DataSnapshot dataSnapshot) {

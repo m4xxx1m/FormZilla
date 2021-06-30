@@ -2,6 +2,7 @@ package ru.raptors.team.formzilla.models;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.OnAnsweredListener;
 import ru.raptors.team.formzilla.interfaces.Saveable;
 
-public class Question implements Saveable {
+public class Question implements Saveable, Serializable {
     private String ID;
     public String question;
     public QuestionTypeEnum questionType;
