@@ -1,6 +1,7 @@
 package ru.raptors.team.formzilla.models;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -33,11 +34,20 @@ public class User implements Saveable {
     private ArrayList<User> staff;
     private ArrayList<Filter> filters;
 
+    public User() {
+        ID = Helper.generateID();
+        forms = new ArrayList<Form>();
+        staff = new ArrayList<User>();
+        filters = new ArrayList<Filter>();
+    }
+
     public User(String ID) {
+        this();
         this.ID = ID;
     }
 
     public User(String ID, String firstName, String lastName, String company, String companyID) {
+        this(ID);
         this.firstName = firstName;
         this.lastName = lastName;
         this.company = company;
@@ -53,11 +63,39 @@ public class User implements Saveable {
         return result;
     }
 
-    public static User loadUserFromFirebase(String login, String password)
+    // метод загружает данные о пользователе по логину и паролю
+    public void loadUserFromFirebaseAndDoAction(String enteredLogin, String enteredPassword, Action action, Context context)
     {
         User result = null;
-        // Todo: метод загружает данные о пользователе по логину и паролю, если пароль или логин не совпадает, то возвращает null
-        return result;
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for(DataSnapshot dataUser: snapshot.getChildren())
+                    {
+                        String login = "";
+                        String password = "";
+                        if (dataUser.hasChild("Login")) login = dataUser.child("Login").getValue(String.class);
+                        if (dataUser.hasChild("Password")) password = dataUser.child("Password").getValue(String.class);
+                        if (login.equals(enteredLogin) && password.equals(enteredPassword)) {
+                            if (dataUser.hasChild("FirstName")) firstName = dataUser.child("FirstName").getValue(String.class);
+                            if (dataUser.hasChild("LastName")) lastName = dataUser.child("LastName").getValue(String.class);
+                            if (dataUser.hasChild("Gender")) gender = new Gender(dataUser.child("Gender").getValue(String.class)).getGender();
+                            if (dataUser.hasChild("Company")) company = dataUser.child("Company").getValue(String.class);
+                            if (dataUser.hasChild("CompanyID")) companyID = dataUser.child("CompanyID").getValue(String.class);
+                            ID = dataUser.getKey();
+                            getFormsFromFirebaseAndDoAction(null, context);
+                            action.run();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     public User generateUser(String firstName, String lastName)
@@ -70,7 +108,7 @@ public class User implements Saveable {
     }
 
     // получает все доступные и пройденные опросы с Firebase
-    public void getFormsFromFirebaseAndDoAction(Context context, Action action)
+    public void getFormsFromFirebaseAndDoAction(Action action, Context context)
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Forms");
         reference.addValueEventListener(new ValueEventListener() {
@@ -80,12 +118,16 @@ public class User implements Saveable {
                     for(DataSnapshot dataForm : snapshot.getChildren())
                     {
                         Form form = new Form(dataForm);
+                        Log.i("FormTitle", form.title);
+                        Log.i("FormStatus", form.getStatus().toString());
                         Form existForm = findFormByID(form.getID());
                         if(existForm == null)
                         {
-                            forms.add(form);
+                            form.save(context);
                         }
                     }
+                    save(context);
+                    if(action != null) action.run();
                 }
             }
 
@@ -159,11 +201,26 @@ public class User implements Saveable {
         // Todo: загружает все фильтры на Firebase
     }
 
+    public void generateLogin()
+    {
+        //Todo: генерация логина
+    }
+
+    public void generatePassword()
+    {
+        //Todo: генерация пароля
+    }
+
     public void save(Context context)
     {
         UsersDatabase usersDatabase;
         usersDatabase = new UsersDatabase(context);
-        usersDatabase.update(this);
+        if(usersDatabase.hasUser(ID)) usersDatabase.update(this);
+        else usersDatabase.insert(this);
+        for(Form form : forms)
+        {
+            form.save(context);
+        }
     }
 
     public void saveInFirebase(Context context)
@@ -204,9 +261,10 @@ public class User implements Saveable {
 
     private Form findFormByID(String ID)
     {
-        for (Form form : forms)
-        {
-            if(form.getID().equals(ID)) return form;
+        if(forms == null || !forms.isEmpty()) {
+            for (Form form : forms) {
+                if (form.getID().equals(ID)) return form;
+            }
         }
         return null;
     }
@@ -254,6 +312,11 @@ public class User implements Saveable {
                 }
             }
         }
+    }
+
+    public void addForm(Form form)
+    {
+        forms.add(form);
     }
 
     public String packStaff()
@@ -390,5 +453,29 @@ public class User implements Saveable {
 
     public void setCompanyID(String companyID) {
         this.companyID = companyID;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public ArrayList<User> getStaff() {
+        return staff;
+    }
+
+    public ArrayList<Filter> getFilters() {
+        return filters;
     }
 }

@@ -6,7 +6,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -23,6 +22,7 @@ import ru.raptors.team.formzilla.models.MultipleQuestion;
 import ru.raptors.team.formzilla.models.Question;
 import ru.raptors.team.formzilla.models.SingleAnswerQuestion;
 import ru.raptors.team.formzilla.models.TextQuestion;
+import ru.raptors.team.formzilla.models.User;
 
 public class CreateQuestionActivity extends AppCompatActivity {
 
@@ -91,7 +91,7 @@ public class CreateQuestionActivity extends AppCompatActivity {
         answersLayout = findViewById(R.id.answers_layout);
         addAnswerLayout = findViewById(R.id.add_answer_layout);
         answersPlaceHolder = findViewById(R.id.answers_place_holder);
-        placeHolder = findViewById(R.id.place_holder);
+        placeHolder = findViewById(R.id.multiple_answer_place_holder);
     }
 
     private void getFormFromPreviousActivity()
@@ -172,6 +172,8 @@ public class CreateQuestionActivity extends AppCompatActivity {
     {
         boolean questionAddResult = addThisQuestionToForm();
         if(questionAddResult) {
+            User nowUser = User.getNowUser(this);
+            nowUser.addForm(form);
             form.sendToStaff();
             Intent createFormIntent = new Intent(CreateQuestionActivity.this, MainActivity.class);
             startActivity(createFormIntent);

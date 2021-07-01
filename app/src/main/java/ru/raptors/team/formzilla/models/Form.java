@@ -1,6 +1,7 @@
 package ru.raptors.team.formzilla.models;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 
@@ -49,6 +50,7 @@ public class Form implements Saveable, Serializable {
     public Form(DataSnapshot dataSnapshot) {
         this();
         ID = dataSnapshot.getKey();
+        if(dataSnapshot.hasChild("Title")) title = dataSnapshot.child("Title").getValue(String.class);
         if(dataSnapshot.hasChild("Status")) setStatus(new FormStatus(dataSnapshot.child("Status").getValue(String.class)).getFormStatus());
         if(dataSnapshot.hasChild("Questions"))
         {
@@ -95,7 +97,12 @@ public class Form implements Saveable, Serializable {
     {
         FormsDatabase formsDatabase;
         formsDatabase = new FormsDatabase(context);
-        formsDatabase.update(this);
+        if(formsDatabase.hasForm(ID)) formsDatabase.update(this);
+        else formsDatabase.insert(this);
+        for(Question question : questions)
+        {
+            question.save(context);
+        }
     }
 
     public void loadFromPhone(Context context)
@@ -103,10 +110,12 @@ public class Form implements Saveable, Serializable {
         FormsDatabase formsDatabase;
         formsDatabase = new FormsDatabase(context);
         Form form = formsDatabase.select(ID);
-        this.status = form.status;
-        this.title = form.title;
-        this.questions = form.questions;
-        this.staff = form.staff;
+        if(form != null) {
+            this.status = form.status;
+            this.title = form.title;
+            this.questions = form.questions;
+            this.staff = form.staff;
+        }
     }
 
     public String packQuestions()

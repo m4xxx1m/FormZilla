@@ -85,9 +85,9 @@ public class UsersDatabase {
         contentValues.put(COLUMN_LAST_NAME, user.getLastName());
         contentValues.put(COLUMN_COMPANY, user.getCompany());
         contentValues.put(COLUMN_COMPANY_ID, user.getCompanyID());
-        contentValues.put(COLUMN_FORMS, user.packForms());
-        contentValues.put(COLUMN_STAFF, user.packStaff());
-        contentValues.put(COLUMN_FILTERS, user.packFilters());
+        if(user.getForms() != null && !user.getForms().isEmpty()) contentValues.put(COLUMN_FORMS, user.packForms());
+        if(user.getStaff() != null && !user.getStaff().isEmpty()) contentValues.put(COLUMN_STAFF, user.packStaff());
+        if(user.getFilters() != null && !user.getFilters().isEmpty())contentValues.put(COLUMN_FILTERS, user.packFilters());
 
         return database.update(TABLE_NAME, contentValues, COLUMN_ID + " = ?",new String[] { String.valueOf(user.getID())});
     }

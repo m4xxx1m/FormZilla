@@ -74,9 +74,11 @@ public class Filter implements Saveable {
         FiltersDatabase filtersDatabase;
         filtersDatabase = new FiltersDatabase(context);
         Filter filter = filtersDatabase.select(ID);
-        this.filter = filter.filter;
-        this.category = filter.category;
-        this.staff = filter.staff;
+        if(filter != null) {
+            this.filter = filter.filter;
+            this.category = filter.category;
+            this.staff = filter.staff;
+        }
     }
 
     public String packStaff()

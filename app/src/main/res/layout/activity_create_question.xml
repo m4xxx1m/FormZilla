@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:id="@+id/place_holder">
+            android:id="@+id/question_place_holder">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -131,14 +131,21 @@
 
             </LinearLayout>
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
+            <LinearLayout
+                android:id="@+id/multiple_answer_place_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:id="@+id/multiple_answer"
-                android:text="@string/multiple_answer"
-                android:layout_marginHorizontal="20dp"
-                android:textAlignment="viewStart" />
+                android:orientation="vertical">
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/multiple_answer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:text="@string/multiple_answer"
+                    android:textAlignment="viewStart"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/create_filter_by_answer"

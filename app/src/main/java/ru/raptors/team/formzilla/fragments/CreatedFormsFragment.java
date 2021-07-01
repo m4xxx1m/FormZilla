@@ -5,17 +5,26 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.activities.EnterFormNameActivity;
+import ru.raptors.team.formzilla.adapters.CreatedFormsAdapter;
 import ru.raptors.team.formzilla.models.Form;
+import ru.raptors.team.formzilla.models.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,6 +39,8 @@ public class CreatedFormsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     public final static String FORM = "form";
+
+    private ConstraintLayout placeHolder;
 
     // TODO: Rename and change types of parameters
 
@@ -64,6 +75,21 @@ public class CreatedFormsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        User nowUser = User.getNowUser(getContext());
+        if(nowUser != null) {
+            ArrayList<Form> createdForms = nowUser.getCreatedForms();
+            Log.i("CreatedFormsCount", Integer.toString(createdForms.size()));
+            CreatedFormsAdapter createdFormsAdapter = new CreatedFormsAdapter(getContext(), createdForms);
+            RecyclerView createdFormsRecyclerView = view.findViewById(R.id.created_forms_recycler_view);
+            createdFormsRecyclerView.setAdapter(createdFormsAdapter);
+            if (createdForms == null || createdForms.isEmpty()) {
+                placeHolder = getActivity().findViewById(R.id.place_holder);
+                placeHolder.removeView(view.findViewById(R.id.created_forms_recycler_view));
+                TextView textView = new TextView(getContext().getApplicationContext());
+                textView.setText("Нет созданных опросов");
+                placeHolder.addView(textView);
+            }
+        }
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.createFormButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
