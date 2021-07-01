@@ -22,4 +22,6 @@
     <string name="enterName">Введите название...</string>
     <string name="newForm">Новый опрос</string>
     <string name="Next">Далее</string>
+    <string name="enter_filter_category">Введите категорию фильтра</string>
+    <string name="error">Ошибка!</string>
 </resources>

@@ -149,6 +149,23 @@
                 android:textAlignment="viewStart"
                 android:textSize="18sp" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/filter_category"
+                android:hint="@string/enter_filter_category"
+                android:importantForAutofill="no"
+                android:inputType="textAutoCorrect"
+                android:layout_marginHorizontal="20dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/error"
+                android:textColor="@android:color/holo_red_dark"
+                android:layout_marginHorizontal="20dp"
+                android:text="@string/error"/>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
