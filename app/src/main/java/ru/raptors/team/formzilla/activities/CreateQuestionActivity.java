@@ -7,11 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import ru.raptors.team.formzilla.R;
@@ -27,7 +29,7 @@ import ru.raptors.team.formzilla.models.User;
 public class CreateQuestionActivity extends AppCompatActivity {
 
     private Form form;
-    private Toolbar toolbar;
+    private MaterialToolbar toolbar;
     private EditText questionNameText;
     private SwitchMaterial freeAnswerSwitch;
     private SwitchMaterial multipleAnswerSwitch;
@@ -46,7 +48,7 @@ public class CreateQuestionActivity extends AppCompatActivity {
         getFormFromPreviousActivity();
         // писать ниже
         question = new SingleAnswerQuestion();
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
         toolbar.setTitle(form.title);
         freeAnswerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -79,6 +81,23 @@ public class CreateQuestionActivity extends AppCompatActivity {
             }
         });
         addAnswer(null);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: Костя, это кнопка предыдущий вопрос
+            }
+        });
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.next_button) {
+                    // TODO: Костя, это кнопка следующий вопрос
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void findAndSetViews()
