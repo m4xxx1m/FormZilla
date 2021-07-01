@@ -24,4 +24,6 @@
     <string name="Next">Далее</string>
     <string name="enter_filter_category">Введите категорию фильтра</string>
     <string name="error">Ошибка!</string>
+    <string name="next_button_menu">next_button</string>
+    <string name="enter_form_name">Придумайте название опроса</string>
 </resources>
