@@ -31,4 +31,7 @@
     <string name="first_name">Имя:</string>
     <string name="position">Должность:</string>
     <string name="email">E-Mail:</string>
+    <string name="terms_of_use"><u>Пользовательское соглашение</u></string>
+    <string name="you_accept">Регистрируясь, вы принимаете условия</string>
+    <string name="company_name">Название\nкомпании:</string>
 </resources>

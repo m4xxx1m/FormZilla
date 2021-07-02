@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.NewEmployeeActivity">
+    tools:context=".activities.SignUpActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -14,14 +14,19 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             app:titleTextColor="@color/white"
             android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
             android:id="@+id/toolbar"
-            app:title="@string/new_employee"
-            app:navigationIcon="@drawable/baseline_arrow_back_24"/>
-    </com.google.android.material.appbar.AppBarLayout>
+            app:title="Регистрация"/>
+  </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="10dp"
         android:layout_marginTop="?attr/actionBarSize"
@@ -43,7 +48,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="@string/last_name"
+                    android:gravity="end"
+                    android:textAlignment="gravity"
+                    android:text="@string/company_name"
                     android:textColor="#777777"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -58,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:textColor="#777777"
-                    android:text="@string/first_name"
+                    android:text="@string/last_name"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
 
@@ -72,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:textColor="#777777"
-                    android:text="@string/position"
+                    android:text="@string/name"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
 
@@ -103,34 +110,37 @@
                 android:layout_marginBottom="10dp"
                 android:layout_height="60dp">
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_company_name"
+                    android:singleLine="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_marginBottom="10dp"
+                android:layout_height="60dp">
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_last_name"
                     android:singleLine="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="10dp"
-                android:layout_height="60dp">
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_first_name"
-                    android:singleLine="true"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_marginBottom="10dp"
-                android:layout_height="60dp">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_position"
+                    android:layout_height="match_parent"
                     android:inputType="text"
-                    android:layout_width="match_parent"
-                    android:singleLine="true"
-                    android:layout_height="match_parent" />
+                    android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -144,6 +154,22 @@
                     android:layout_height="match_parent" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/you_accept"
+        android:textAlignment="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/terms_of_use"
+        android:textAlignment="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:textColor="#125D98"/>
 
     </LinearLayout>
 
