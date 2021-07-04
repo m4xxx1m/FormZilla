@@ -3,15 +3,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/availableForms"
-            android:title="Доступные опросы" />
+            android:checked="true"
+            android:icon="@drawable/outline_bar_chart_24"
+            android:title="@string/available_forms" />
         <item
             android:id="@+id/passedForms"
-            android:title="Пройденные опросы" />
+            android:icon="@drawable/baseline_done_24"
+            android:title="@string/completed_forms" />
         <item
             android:id="@+id/createdForms"
-            android:title="Созданные опросы" />
+            android:icon="@drawable/outline_person_24"
+            android:title="@string/created_forms" />
         <item
             android:id="@+id/staff"
-            android:title="Сотрудники" />
+            android:icon="@drawable/outline_groups_24"
+            android:title="@string/staff" />
+        <item
+            android:id="@+id/create_form"
+            android:icon="@drawable/outline_create_24"
+            android:title="@string/create_form" />
     </group>
 </menu>
