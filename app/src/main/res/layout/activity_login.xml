@@ -61,6 +61,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
+                    android:inputType="text"
+                    android:singleLine="true"
                     android:hint="@string/login" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,6 +77,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
+                    android:singleLine="true"
+                    android:inputType="textPassword"
                     android:hint="@string/password" />
             </com.google.android.material.textfield.TextInputLayout>
 

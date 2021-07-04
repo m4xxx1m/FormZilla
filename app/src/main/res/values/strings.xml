@@ -34,4 +34,5 @@
     <string name="terms_of_use"><u>Пользовательское соглашение</u></string>
     <string name="you_accept">Регистрируясь, вы принимаете условия</string>
     <string name="company_name">Название\nкомпании:</string>
+    <string name="enter_answer">Введите ответ...</string>
 </resources>
