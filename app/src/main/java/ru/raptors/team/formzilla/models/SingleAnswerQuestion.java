@@ -14,6 +14,12 @@ public class SingleAnswerQuestion extends MultipleQuestion {
         questionType = QuestionTypeEnum.SingleAnswer;
     }
 
+    public SingleAnswerQuestion(String ID)
+    {
+        super(ID);
+        questionType = QuestionTypeEnum.SingleAnswer;
+    }
+
     public SingleAnswerQuestion(ArrayList<String> answers) {
         super(answers);
         questionType = QuestionTypeEnum.SingleAnswer;

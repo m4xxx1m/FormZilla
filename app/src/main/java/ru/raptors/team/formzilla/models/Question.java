@@ -3,17 +3,14 @@ package ru.raptors.team.formzilla.models;
 import android.content.Context;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 
-import ru.raptors.team.formzilla.databases.FormsDatabase;
 import ru.raptors.team.formzilla.databases.QuestionsDatabase;
 import ru.raptors.team.formzilla.enums.OnAnsweredListenerEnum;
 import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.OnAnsweredListener;
-import ru.raptors.team.formzilla.interfaces.Saveable;
 
-public class Question implements Saveable, Serializable {
+public class Question implements Serializable {
     private String ID;
     public String question;
     public QuestionTypeEnum questionType;
@@ -49,17 +46,15 @@ public class Question implements Saveable, Serializable {
     {
         QuestionsDatabase questionsDatabase;
         questionsDatabase = new QuestionsDatabase(context);
-        questionsDatabase.update(this);
+        if(questionsDatabase.hasQuestion(ID)) questionsDatabase.update(this);
+        else questionsDatabase.insert(this);
     }
 
-    public void loadFromPhone(Context context)
+    public static Question loadFromPhone(String ID, Context context)
     {
         QuestionsDatabase questionsDatabase;
         questionsDatabase = new QuestionsDatabase(context);
-        Question question = questionsDatabase.select(ID);
-        this.question = question.question;
-        this.questionType = question.questionType;
-        this.onAnsweredListeners = question.onAnsweredListeners;
+        return questionsDatabase.select(ID);
     }
 
     public String packOnAnsweredListeners()

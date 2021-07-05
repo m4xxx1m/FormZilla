@@ -11,6 +11,10 @@ public class MultiAnswersQuestion extends MultipleQuestion{
         super();
     }
 
+    public MultiAnswersQuestion(String ID) {
+        super(ID);
+    }
+
     public MultiAnswersQuestion(ArrayList<String> answers) {
         super(answers);
     }

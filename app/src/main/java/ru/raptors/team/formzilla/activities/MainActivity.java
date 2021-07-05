@@ -20,6 +20,7 @@ import com.google.android.material.navigation.NavigationView;
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.fragments.AvailableFormsFragment;
 import ru.raptors.team.formzilla.fragments.CreatedFormsFragment;
+import ru.raptors.team.formzilla.fragments.PassedFormsFragment;
 import ru.raptors.team.formzilla.fragments.StaffFragment;
 import ru.raptors.team.formzilla.models.Form;
 
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             }
                             case R.id.passedForms:{
-                                openCompletedForms();
+                                openPassedFormsFragment();
                                 break;
                             }
                             case R.id.createdForms:{
@@ -93,12 +94,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(createFormIntent);
     }
 
-    private void openCompletedForms() {
-        toolbar.setTitle(R.string.completed_forms);
-    }
-
     private void openAvailableFormsFragment()
     {
+        toolbar.setTitle(R.string.available_forms);
         placeHolder.removeAllViews();
         AvailableFormsFragment availableFormsFragment = AvailableFormsFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -106,11 +104,24 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.place_holder, availableFormsFragment)
                 .commit();
-        toolbar.setTitle(R.string.available_forms);
     }
+
+    private void openPassedFormsFragment()
+    {
+        toolbar.setTitle(R.string.passed_forms);
+        placeHolder.removeAllViews();
+        PassedFormsFragment passedFormsFragment = PassedFormsFragment.newInstance();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.place_holder, passedFormsFragment)
+                .commit();
+    }
+
 
     private void openCreatedFormsFragment()
     {
+        toolbar.setTitle(R.string.created_forms);
         placeHolder.removeAllViews();
         CreatedFormsFragment createdFormsFragment = CreatedFormsFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -118,11 +129,11 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.place_holder, createdFormsFragment)
                 .commit();
-        toolbar.setTitle(R.string.created_forms);
     }
 
     private void openStaffFragment()
     {
+        toolbar.setTitle(R.string.staff);
         placeHolder.removeAllViews();
         StaffFragment staffFragment = StaffFragment.newInstance();
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -130,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.place_holder, staffFragment)
                 .commit();
-        toolbar.setTitle(R.string.staff);
     }
 
     @Override

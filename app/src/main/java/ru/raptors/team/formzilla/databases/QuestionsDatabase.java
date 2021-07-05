@@ -9,8 +9,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
+import ru.raptors.team.formzilla.models.MultiAnswersQuestion;
+import ru.raptors.team.formzilla.models.MultipleQuestion;
 import ru.raptors.team.formzilla.models.Question;
 import ru.raptors.team.formzilla.models.QuestionType;
+import ru.raptors.team.formzilla.models.SingleAnswerQuestion;
+import ru.raptors.team.formzilla.models.TextQuestion;
 
 public class QuestionsDatabase implements Serializable {
     private static final String DATABASE_NAME = "questions.db";
@@ -21,11 +26,13 @@ public class QuestionsDatabase implements Serializable {
     private static final String COLUMN_QUESTION = "question";
     private static final String COLUMN_QUESTION_TYPE = "questionType";
     private static final String COLUMN_ON_ANSWERED_LISTENERS = "onAnsweredListeners";
+    private static final String COLUMN_ANSWERS = "answers";
 
     private static final int NUM_COLUMN_ID = 0;
     private static final int NUM_COLUMN_QUESTION = 1;
     private static final int NUM_COLUMN_QUESTION_TYPE = 2;
     private static final int NUM_COLUMN_ON_ANSWERED_LISTENERS = 3;
+    private static final int NUM_COLUMN_ANSWERS = 4;
 
     private SQLiteDatabase database;
 
@@ -34,7 +41,8 @@ public class QuestionsDatabase implements Serializable {
                     COLUMN_ID + " STRING PRIMARY KEY," +
                     COLUMN_QUESTION + " TEXT," +
                     COLUMN_QUESTION_TYPE + " TEXT," +
-                    COLUMN_ON_ANSWERED_LISTENERS + " TEXT)";
+                    COLUMN_ON_ANSWERED_LISTENERS + " TEXT," +
+                    COLUMN_ANSWERS + " TEXT)";
 
     public QuestionsDatabase (Context context)
     {
@@ -48,16 +56,25 @@ public class QuestionsDatabase implements Serializable {
         contentValues.put(COLUMN_QUESTION, question.question);
         contentValues.put(COLUMN_QUESTION_TYPE, new QuestionType(question.questionType).toString());
         contentValues.put(COLUMN_ON_ANSWERED_LISTENERS, question.packOnAnsweredListeners());
+        if(question.questionType != QuestionTypeEnum.TextAnswer)
+        {
+            MultipleQuestion multipleQuestion = (MultipleQuestion) question;
+            contentValues.put(COLUMN_ANSWERS, multipleQuestion.packAnswers());
+        }
 
         return database.insert(TABLE_NAME, null, contentValues);
     }
 
     public int update(Question question) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID, question.getID());
         contentValues.put(COLUMN_QUESTION, question.question);
         contentValues.put(COLUMN_QUESTION_TYPE, new QuestionType(question.questionType).toString());
         contentValues.put(COLUMN_ON_ANSWERED_LISTENERS, question.packOnAnsweredListeners());
+        if(question.questionType != QuestionTypeEnum.TextAnswer)
+        {
+            MultipleQuestion multipleQuestion = (MultipleQuestion) question;
+            contentValues.put(COLUMN_ANSWERS, multipleQuestion.packAnswers());
+        }
 
         return database.update(TABLE_NAME, contentValues, COLUMN_ID + " = ?",new String[] { String.valueOf(question.getID())});
     }
@@ -76,13 +93,34 @@ public class QuestionsDatabase implements Serializable {
         cursor.moveToFirst();
         if(cursor.getCount() == 0) return null;
         String question = cursor.getString(NUM_COLUMN_QUESTION);
-        String questionType = cursor.getString(NUM_COLUMN_QUESTION_TYPE);
+        String questionTypeString = cursor.getString(NUM_COLUMN_QUESTION_TYPE);
         String onAnsweredListeners = cursor.getString(NUM_COLUMN_ON_ANSWERED_LISTENERS);
-        Question result = new Question(id);
-        result.question = question;
-        result.questionType = new QuestionType(questionType).questionTypeEnum;
-        result.unpackOnAnsweredListeners(onAnsweredListeners);
-        return result;
+        String answers = cursor.getString(NUM_COLUMN_ANSWERS);
+        QuestionTypeEnum questionType = new QuestionType(questionTypeString).questionTypeEnum;
+        switch (questionType)
+        {
+            case TextAnswer:
+                TextQuestion resultTA = new TextQuestion(id);
+                resultTA.question = question;
+                resultTA.questionType = QuestionTypeEnum.TextAnswer;
+                resultTA.unpackOnAnsweredListeners(onAnsweredListeners);
+                return resultTA;
+            case MultiAnswer:
+                MultiAnswersQuestion resultMA = new MultiAnswersQuestion(id);
+                resultMA.question = question;
+                resultMA.questionType = QuestionTypeEnum.MultiAnswer;
+                resultMA.unpackAnswers(answers);
+                resultMA.unpackOnAnsweredListeners(onAnsweredListeners);
+                return resultMA;
+            case SingleAnswer:
+                SingleAnswerQuestion resultSA = new SingleAnswerQuestion(id);
+                resultSA.question = question;
+                resultSA.questionType = QuestionTypeEnum.SingleAnswer;
+                resultSA.unpackAnswers(answers);
+                resultSA.unpackOnAnsweredListeners(onAnsweredListeners);
+                return resultSA;
+        }
+        return null;
     }
 
     public ArrayList<Question> selectAll() {
@@ -94,13 +132,33 @@ public class QuestionsDatabase implements Serializable {
             do {
                 String id = cursor.getString(NUM_COLUMN_ID);
                 String question = cursor.getString(NUM_COLUMN_QUESTION);
-                String questionType = cursor.getString(NUM_COLUMN_QUESTION_TYPE);
+                String questionTypeString = cursor.getString(NUM_COLUMN_QUESTION_TYPE);
                 String onAnsweredListeners = cursor.getString(NUM_COLUMN_ON_ANSWERED_LISTENERS);
-                Question result = new Question(id);
-                result.question = question;
-                result.questionType = new QuestionType(questionType).questionTypeEnum;
-                result.unpackOnAnsweredListeners(onAnsweredListeners);
-                arrayList.add(result);
+                String answers = cursor.getString(NUM_COLUMN_ANSWERS);
+                QuestionTypeEnum questionType = new QuestionType(questionTypeString).questionTypeEnum;
+                switch (questionType)
+                {
+                    case TextAnswer:
+                        TextQuestion resultTA = new TextQuestion(id);
+                        resultTA.question = question;
+                        resultTA.questionType = QuestionTypeEnum.TextAnswer;
+                        resultTA.unpackOnAnsweredListeners(onAnsweredListeners);
+                        arrayList.add(resultTA);
+                    case MultiAnswer:
+                        MultiAnswersQuestion resultMA = new MultiAnswersQuestion(id);
+                        resultMA.question = question;
+                        resultMA.questionType = QuestionTypeEnum.MultiAnswer;
+                        resultMA.unpackAnswers(answers);
+                        resultMA.unpackOnAnsweredListeners(onAnsweredListeners);
+                        arrayList.add(resultMA);
+                    case SingleAnswer:
+                        SingleAnswerQuestion resultSA = new SingleAnswerQuestion(id);
+                        resultSA.question = question;
+                        resultSA.questionType = QuestionTypeEnum.SingleAnswer;
+                        resultSA.unpackAnswers(answers);
+                        resultSA.unpackOnAnsweredListeners(onAnsweredListeners);
+                        arrayList.add(resultSA);
+                }
             } while (cursor.moveToNext());
         }
         return arrayList;

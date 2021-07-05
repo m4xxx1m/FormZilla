@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -65,10 +66,11 @@ public class CreatedFormsFragment extends Fragment {
         User nowUser = User.getNowUser(getContext());
         if(nowUser != null) {
             ArrayList<Form> createdForms = nowUser.getCreatedForms();
-            Log.i("CreatedFormsCount", Integer.toString(createdForms.size()));
+            Log.i("UserForms", nowUser.formsToString());
             CreatedFormsAdapter createdFormsAdapter = new CreatedFormsAdapter(getContext(), createdForms);
             RecyclerView createdFormsRecyclerView = view.findViewById(R.id.created_forms_recycler_view);
             createdFormsRecyclerView.setAdapter(createdFormsAdapter);
+            createdFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             if (createdForms == null || createdForms.isEmpty()) {
                 placeHolder = getActivity().findViewById(R.id.place_holder);
                 placeHolder.removeView(view.findViewById(R.id.created_forms_recycler_view));

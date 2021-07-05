@@ -1,5 +1,6 @@
 package ru.raptors.team.formzilla.models;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -13,15 +14,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import ru.raptors.team.formzilla.databases.FormsDatabase;
 import ru.raptors.team.formzilla.databases.NowUserDatabase;
 import ru.raptors.team.formzilla.databases.UsersDatabase;
 import ru.raptors.team.formzilla.enums.FormStatusEnum;
 import ru.raptors.team.formzilla.enums.GenderEnum;
+import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.Action;
-import ru.raptors.team.formzilla.interfaces.Saveable;
 
-public class User implements Saveable {
+public class User {
     private String ID;
     private String login;
     private String password;
@@ -64,29 +64,38 @@ public class User implements Saveable {
     }
 
     // метод загружает данные о пользователе по логину и паролю
-    public void loadUserFromFirebaseAndDoAction(String enteredLogin, String enteredPassword, Action action, Context context)
+    public void loadUserFromFirebaseAndDoAction(String enteredLogin, String enteredPassword, Action action, Context context, Activity activity)
     {
         User result = null;
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for(DataSnapshot dataUser: snapshot.getChildren())
-                    {
-                        String login = "";
-                        String password = "";
-                        if (dataUser.hasChild("Login")) login = dataUser.child("Login").getValue(String.class);
-                        if (dataUser.hasChild("Password")) password = dataUser.child("Password").getValue(String.class);
-                        if (login.equals(enteredLogin) && password.equals(enteredPassword)) {
-                            if (dataUser.hasChild("FirstName")) firstName = dataUser.child("FirstName").getValue(String.class);
-                            if (dataUser.hasChild("LastName")) lastName = dataUser.child("LastName").getValue(String.class);
-                            if (dataUser.hasChild("Gender")) gender = new Gender(dataUser.child("Gender").getValue(String.class)).getGender();
-                            if (dataUser.hasChild("Company")) company = dataUser.child("Company").getValue(String.class);
-                            if (dataUser.hasChild("CompanyID")) companyID = dataUser.child("CompanyID").getValue(String.class);
-                            ID = dataUser.getKey();
-                            getFormsFromFirebaseAndDoAction(null, context);
-                            action.run();
+                if(!activity.isFinishing()) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot dataUser : snapshot.getChildren()) {
+                            String login = "";
+                            String password = "";
+                            if (dataUser.hasChild("Login"))
+                                login = dataUser.child("Login").getValue(String.class);
+                            if (dataUser.hasChild("Password"))
+                                password = dataUser.child("Password").getValue(String.class);
+                            if (login.equals(enteredLogin) && password.equals(enteredPassword)) {
+                                if (dataUser.hasChild("FirstName"))
+                                    firstName = dataUser.child("FirstName").getValue(String.class);
+                                if (dataUser.hasChild("LastName"))
+                                    lastName = dataUser.child("LastName").getValue(String.class);
+                                if (dataUser.hasChild("Gender"))
+                                    gender = new Gender(dataUser.child("Gender").getValue(String.class)).getGender();
+                                if (dataUser.hasChild("Company"))
+                                    company = dataUser.child("Company").getValue(String.class);
+                                if (dataUser.hasChild("CompanyID"))
+                                    companyID = dataUser.child("CompanyID").getValue(String.class);
+                                if (dataUser.hasChild("Staff"))
+                                    unpackStaff(dataUser.child("Staff").getValue(String.class), context);
+                                ID = dataUser.getKey();
+                                getFormsFromFirebaseAndDoAction(action, context, activity);
+                            }
                         }
                     }
                 }
@@ -100,34 +109,36 @@ public class User implements Saveable {
 
     public User generateUser(String firstName, String lastName)
     {
-        User result = null;
-        ID = Helper.generateID();
+        String employeeID = Helper.generateID();
+        User result = new User(employeeID);
         result.firstName = firstName;
         result.lastName = lastName;
+        result.setLogin(Helper.generateLogin());
+        result.setPassword(Helper.generatePassword());
         return result;
     }
 
     // получает все доступные и пройденные опросы с Firebase
-    public void getFormsFromFirebaseAndDoAction(Action action, Context context)
+    public void getFormsFromFirebaseAndDoAction(Action action, Context context, Activity activity)
     {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts").child(ID).child("Forms");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for(DataSnapshot dataForm : snapshot.getChildren())
-                    {
-                        Form form = new Form(dataForm);
-                        Log.i("FormTitle", form.title);
-                        Log.i("FormStatus", form.getStatus().toString());
-                        Form existForm = findFormByID(form.getID());
-                        if(existForm == null)
-                        {
-                            form.save(context);
+                if(!activity.isFinishing()) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot dataForm : snapshot.getChildren()) {
+                            Form form = new Form(dataForm);
+                            Log.i("FormTitle", form.title);
+                            Log.i("FormStatus", form.getStatus().toString());
+                            Form existForm = findFormByID(form.getID());
+                            if (existForm == null) {
+                                forms.add(form);
+                            }
                         }
+                        save(context);
                     }
-                    save(context);
-                    if(action != null) action.run();
+                    if (action != null) action.run();
                 }
             }
 
@@ -152,7 +163,9 @@ public class User implements Saveable {
     {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference formReference = firebaseDatabase.getReference("Accounts").child(ID).child("Forms").child(form.getID());
-        DatabaseReference databaseReference = formReference.child("Status");
+        DatabaseReference databaseReference = formReference.child("Title");
+        databaseReference.setValue(form.title);
+        databaseReference = formReference.child("Status");
         FormStatus status = new FormStatus(form.getStatus());
         databaseReference.setValue(status.toString());
         for(int i = 0; i < form.questions.size(); i++)
@@ -187,6 +200,14 @@ public class User implements Saveable {
                         break;
                     }
                 }
+            } else if (form.getStatus() == FormStatusEnum.Created) {
+                if (question.questionType != QuestionTypeEnum.TextAnswer) {
+                    MultipleQuestion multipleQuestion = (MultipleQuestion) question;
+                    for (int j = 0; j < multipleQuestion.answers.size(); j++) {
+                        databaseReference = questionReference.child("Answers").child(Integer.toString(j));
+                        databaseReference.setValue(multipleQuestion.answers.get(j));
+                    }
+                }
             }
         }
     }
@@ -201,26 +222,17 @@ public class User implements Saveable {
         // Todo: загружает все фильтры на Firebase
     }
 
-    public void generateLogin()
-    {
-        //Todo: генерация логина
-    }
-
-    public void generatePassword()
-    {
-        //Todo: генерация пароля
-    }
-
     public void save(Context context)
     {
         UsersDatabase usersDatabase;
         usersDatabase = new UsersDatabase(context);
-        if(usersDatabase.hasUser(ID)) usersDatabase.update(this);
-        else usersDatabase.insert(this);
+        if(usersDatabase.hasUser(ID)) usersDatabase.update(User.this);
+        else usersDatabase.insert(User.this);
         for(Form form : forms)
         {
             form.save(context);
         }
+        saveInFirebase(context);
     }
 
     public void saveInFirebase(Context context)
@@ -228,10 +240,14 @@ public class User implements Saveable {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference accountReference = firebaseDatabase.getReference("Accounts").child(ID);
         DatabaseReference databaseReference;
-        databaseReference = accountReference.child("Login");
-        databaseReference.setValue(login);
-        databaseReference = accountReference.child("Password");
-        databaseReference.setValue(password);
+        if(login != null) {
+            databaseReference = accountReference.child("Login");
+            databaseReference.setValue(login);
+        }
+        if(password != null) {
+            databaseReference = accountReference.child("Password");
+            databaseReference.setValue(password);
+        }
         databaseReference = accountReference.child("FirstName");
         databaseReference.setValue(firstName);
         databaseReference = accountReference.child("LastName");
@@ -240,23 +256,20 @@ public class User implements Saveable {
         databaseReference.setValue(company);
         databaseReference = accountReference.child("CompanyID");
         databaseReference.setValue(companyID);
-        databaseReference = accountReference.child("Gender");
-        databaseReference.setValue(new Gender(gender).getGender());
+        if(gender != null) {
+            databaseReference = accountReference.child("Gender");
+            databaseReference.setValue(new Gender(gender).getGender());
+        }
+        databaseReference = accountReference.child("Staff");
+        databaseReference.setValue(packStaff());
     }
 
-    public void loadFromPhone(Context context)
+    public static User loadFromPhone(String ID, Context context)
     {
         UsersDatabase usersDatabase;
         usersDatabase = new UsersDatabase(context);
         User user = usersDatabase.select(ID);
-        this.gender = user.gender;
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
-        this.company = user.getCompany();
-        this.companyID = user.getCompanyID();
-        this.forms = user.forms;
-        this.staff = user.staff;
-        this.filters = user.filters;
+        return user;
     }
 
     private Form findFormByID(String ID)
@@ -329,13 +342,29 @@ public class User implements Saveable {
         return result;
     }
 
-    public void unpackStaff(String pack)
+    public void unpackStaff(String pack, Context context)
     {
         String[] unpackedStaffID = pack.split(" ");
         for(String unpackedUserID : unpackedStaffID)
         {
-            staff.add(new User(unpackedUserID));
+            User employee = new User(unpackedUserID);
+            UsersDatabase usersDatabase = new UsersDatabase(context);
+            if(usersDatabase.hasUser(employee.getID()))
+            {
+                employee = User.loadFromPhone(employee.getID(), context);
+            }
+
+            if(!hasEmployeeInStaff(employee)) staff.add(employee);
         }
+    }
+
+    public boolean hasEmployeeInStaff(User user)
+    {
+        for(User employeeFromStaff : staff)
+        {
+            if(employeeFromStaff.getID().equals(user.ID)) return true;
+        }
+        return false;
     }
 
     public String packForms()
@@ -405,6 +434,21 @@ public class User implements Saveable {
             if(form.getStatus() == FormStatusEnum.Created) result.add(form);
         }
         return result;
+    }
+
+    public String formsToString()
+    {
+        String result = " ";
+        for(Form form : forms)
+        {
+            result = form.toString() + " ";
+        }
+        return result;
+    }
+
+    public void addEmployeeToStaff(User employee)
+    {
+        staff.add(employee);
     }
 
     public String getID() {

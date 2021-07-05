@@ -28,6 +28,8 @@ public class UsersDatabase {
     private static final String COLUMN_FORMS = "forms";
     private static final String COLUMN_STAFF = "staff";
     private static final String COLUMN_FILTERS = "filters";
+    private static final String COLUMN_LOGIN = "login";
+    private static final String COLUMN_PASSWORD = "password";
 
     private static final int NUM_COLUMN_ID = 0;
     private static final int NUM_COLUMN_GENDER = 1;
@@ -38,6 +40,8 @@ public class UsersDatabase {
     private static final int NUM_COLUMN_FORMS = 6;
     private static final int NUM_COLUMN_STAFF = 7;
     private static final int NUM_COLUMN_FILTERS = 8;
+    private static final int NUM_COLUMN_LOGIN = 9;
+    private static final int NUM_COLUMN_PASSWORD = 10;
 
     private SQLiteDatabase database;
 
@@ -53,7 +57,9 @@ public class UsersDatabase {
                     COLUMN_COMPANY_ID + " TEXT," +
                     COLUMN_FORMS + " TEXT," +
                     COLUMN_STAFF + " TEXT," +
-                    COLUMN_FILTERS + " TEXT)";
+                    COLUMN_FILTERS + " TEXT," +
+                    COLUMN_LOGIN + " TEXT," +
+                    COLUMN_PASSWORD + " TEXT)";
 
     public UsersDatabase (Context context)
     {
@@ -65,26 +71,29 @@ public class UsersDatabase {
     public long insert(User user) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_ID, user.getID());
-        contentValues.put(COLUMN_GENDER, new Gender(user.getGender()).toString());
+        if(user.getGender() != null) contentValues.put(COLUMN_GENDER, new Gender(user.getGender()).toString());
         contentValues.put(COLUMN_FIRST_NAME, user.getFirstName());
         contentValues.put(COLUMN_LAST_NAME, user.getLastName());
         contentValues.put(COLUMN_COMPANY, user.getCompany());
         contentValues.put(COLUMN_COMPANY_ID, user.getCompanyID());
-        contentValues.put(COLUMN_FORMS, user.packForms());
-        contentValues.put(COLUMN_STAFF, user.packStaff());
-        contentValues.put(COLUMN_FILTERS, user.packFilters());
+        if(user.getLogin() != null && !user.getLogin().isEmpty()) contentValues.put(COLUMN_LOGIN, user.getLogin());
+        if(user.getPassword() != null && !user.getPassword().isEmpty()) contentValues.put(COLUMN_PASSWORD, user.getPassword());
+        if(user.getForms() != null && !user.getForms().isEmpty()) contentValues.put(COLUMN_FORMS, user.packForms());
+        if(user.getStaff() != null && !user.getStaff().isEmpty()) contentValues.put(COLUMN_STAFF, user.packStaff());
+        if(user.getFilters() != null && !user.getFilters().isEmpty())contentValues.put(COLUMN_FILTERS, user.packFilters());
 
         return database.insert(TABLE_NAME, null, contentValues);
     }
 
     public int update(User user) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID, user.getID());
-        contentValues.put(COLUMN_GENDER, new Gender(user.getGender()).toString());
+        if(user.getGender() != null) contentValues.put(COLUMN_GENDER, new Gender(user.getGender()).toString());
         contentValues.put(COLUMN_FIRST_NAME, user.getFirstName());
         contentValues.put(COLUMN_LAST_NAME, user.getLastName());
         contentValues.put(COLUMN_COMPANY, user.getCompany());
         contentValues.put(COLUMN_COMPANY_ID, user.getCompanyID());
+        if(user.getLogin() != null && !user.getLogin().isEmpty()) contentValues.put(COLUMN_LOGIN, user.getLogin());
+        if(user.getPassword() != null && !user.getPassword().isEmpty()) contentValues.put(COLUMN_PASSWORD, user.getPassword());
         if(user.getForms() != null && !user.getForms().isEmpty()) contentValues.put(COLUMN_FORMS, user.packForms());
         if(user.getStaff() != null && !user.getStaff().isEmpty()) contentValues.put(COLUMN_STAFF, user.packStaff());
         if(user.getFilters() != null && !user.getFilters().isEmpty())contentValues.put(COLUMN_FILTERS, user.packFilters());
@@ -113,14 +122,19 @@ public class UsersDatabase {
         String forms = cursor.getString(NUM_COLUMN_FORMS);
         String staff = cursor.getString(NUM_COLUMN_STAFF);
         String filters = cursor.getString(NUM_COLUMN_FILTERS);
+        String login = cursor.getString(NUM_COLUMN_LOGIN);
+        String password = cursor.getString(NUM_COLUMN_PASSWORD);
         User result = new User(id);
+        if(gender != null) result.setGender(new Gender(gender).getGender());
         result.setFirstName(firstName);
         result.setLastName(lastName);
         result.setCompany(company);
-        result.setCompanyID(company);
-        result.unpackForms(forms, context);
-        result.unpackStaff(staff);
-        result.unpackFilters(filters, context);
+        result.setCompanyID(companyID);
+        result.setLogin(login);
+        result.setPassword(password);
+        if(forms != null && !forms.isEmpty()) result.unpackForms(forms, context);
+        if(staff != null && !staff.isEmpty()) result.unpackStaff(staff, context);
+        if(filters != null && !filters.isEmpty()) result.unpackFilters(filters, context);
         return result;
     }
 
@@ -140,14 +154,19 @@ public class UsersDatabase {
                 String forms = cursor.getString(NUM_COLUMN_FORMS);
                 String staff = cursor.getString(NUM_COLUMN_STAFF);
                 String filters = cursor.getString(NUM_COLUMN_FILTERS);
+                String login = cursor.getString(NUM_COLUMN_LOGIN);
+                String password = cursor.getString(NUM_COLUMN_PASSWORD);
                 User result = new User(id);
+                if(gender != null) result.setGender(new Gender(gender).getGender());
                 result.setFirstName(firstName);
                 result.setLastName(lastName);
                 result.setCompany(company);
-                result.setCompanyID(company);
-                result.unpackForms(forms, context);
-                result.unpackStaff(staff);
-                result.unpackFilters(filters, context);
+                result.setCompanyID(companyID);
+                result.setLogin(login);
+                result.setPassword(password);
+                if(forms != null && !forms.isEmpty()) result.unpackForms(forms, context);
+                if(staff != null && !staff.isEmpty()) result.unpackStaff(staff, context);
+                if(filters != null && !filters.isEmpty()) result.unpackFilters(filters, context);
                 arrayList.add(result);
             } while (cursor.moveToNext());
         }

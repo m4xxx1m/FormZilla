@@ -148,13 +148,14 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/createEmployeeButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/done"
-        android:layout_margin="15dp"
-        android:id="@+id/button_done"
-        app:cornerRadius="10dp"
         android:layout_gravity="bottom|end"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+        android:layout_margin="15dp"
+        android:onClick="createEmployee"
+        android:text="@string/done"
+        app:cornerRadius="10dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

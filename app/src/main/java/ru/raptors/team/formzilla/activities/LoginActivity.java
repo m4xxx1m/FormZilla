@@ -1,7 +1,9 @@
 package ru.raptors.team.formzilla.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,34 +36,19 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.continue_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // for debugging
-                final String admin = "admin";
-                if (loginEditText.getText().toString().equals(admin) &&
-                        passwordEditText.getText().toString().equals(admin)) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                //
-
-                final User user;
-                if(User.getNowUser(getApplicationContext()) != null)
-                {
-                    user = User.getNowUser(getApplicationContext());
-                }
-                else user = new User();
+                final User user = new User();
                 user.loadUserFromFirebaseAndDoAction(loginEditText.getText().toString(), passwordEditText.getText().toString(), new Action() {
                     @Override
                     public void run() {
                         user.save(getApplicationContext());
                         NowUserDatabase nowUserDatabase = new NowUserDatabase(getApplicationContext());
-                        nowUserDatabase.insert(loginEditText.getText().toString(), passwordEditText.getText().toString(), user.getID());
-                        Intent toMainActivity = new Intent(LoginActivity.this,
-                                MainActivity.class);
-                        startActivity(toMainActivity);
-                        finish();
+                        if(!nowUserDatabase.hasNowUser()) {
+                            nowUserDatabase.insert(loginEditText.getText().toString(), passwordEditText.getText().toString(), user.getID());
+                        } else
+                            nowUserDatabase.update(loginEditText.getText().toString(), passwordEditText.getText().toString(), user.getID());
+                        goToMainActivity();
                     }
-                }, getApplicationContext());
+                }, getApplicationContext(), LoginActivity.this);
             }
         });
         findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
@@ -69,8 +56,17 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
+    }
+
+    private void goToMainActivity()
+    {
+        Intent toMainActivity = new Intent(LoginActivity.this,
+                MainActivity.class);
+        startActivity(toMainActivity);
+        finish();
     }
 
     private void findAndSetViews()

@@ -17,6 +17,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import ru.raptors.team.formzilla.R;
+import ru.raptors.team.formzilla.enums.FormStatusEnum;
 import ru.raptors.team.formzilla.fragments.CreatedFormsFragment;
 import ru.raptors.team.formzilla.models.Form;
 import ru.raptors.team.formzilla.models.MultiAnswersQuestion;
@@ -38,6 +39,7 @@ public class CreateQuestionActivity extends AppCompatActivity {
     private LinearLayout addAnswerLayout;
     private LinearLayout answersPlaceHolder;
     private LinearLayout placeHolder;
+
     private Question question;
 
     @Override
@@ -192,7 +194,11 @@ public class CreateQuestionActivity extends AppCompatActivity {
         boolean questionAddResult = addThisQuestionToForm();
         if(questionAddResult) {
             User nowUser = User.getNowUser(this);
+            form.setStatus(FormStatusEnum.Created);
             nowUser.addForm(form);
+            nowUser.save(getApplicationContext());
+            nowUser.uploadFormToFirebase(form);
+            form.staff = nowUser.getStaff();
             form.sendToStaff();
             Intent createFormIntent = new Intent(CreateQuestionActivity.this, MainActivity.class);
             startActivity(createFormIntent);

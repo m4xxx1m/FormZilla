@@ -52,10 +52,14 @@ public class NowUserDatabase implements Serializable {
             contentValues.put(COLUMN_LOGIN, login);
             contentValues.put(COLUMN_PASSWORD, password);
             contentValues.put(COLUMN_USER_ID, userID);
-
-            return database.insert(TABLE_NAME, null, contentValues);
         }
-        else return -1;
+        return database.insert(TABLE_NAME, null, contentValues);
+
+/*        else
+        {
+            update(login, password, userID);
+            return -1;
+        }*/
     }
 
     public int update(String login, String password, String userID) {

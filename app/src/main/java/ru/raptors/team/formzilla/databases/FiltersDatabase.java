@@ -55,7 +55,6 @@ public class FiltersDatabase implements Serializable {
 
     public int update(Filter filter) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID, filter.ID);
         contentValues.put(COLUMN_FILTER, filter.filter);
         contentValues.put(COLUMN_CATEGORY, filter.category);
         contentValues.put(COLUMN_STAFF, filter.packStaff());

@@ -9,7 +9,7 @@
         <item
             android:id="@+id/passedForms"
             android:icon="@drawable/baseline_done_24"
-            android:title="@string/completed_forms" />
+            android:title="@string/passed_forms" />
         <item
             android:id="@+id/createdForms"
             android:icon="@drawable/outline_person_24"

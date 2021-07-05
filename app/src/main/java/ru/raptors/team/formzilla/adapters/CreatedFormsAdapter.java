@@ -33,7 +33,7 @@ public class CreatedFormsAdapter extends RecyclerView.Adapter<CreatedFormsAdapte
     public void onBindViewHolder(CreatedFormsAdapter.ViewHolder holder, int position) {
         Form form = createdForms.get(position);
         holder.title.setText(form.title);
-        holder.questionsCount.setText(Integer.toString(form.questions.size()));
+        holder.questionsCount.setText(Integer.toString(form.questions.size()) + " вопрос");
     }
 
     @Override

@@ -34,7 +34,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>{
         User user = staff.get(position);
         holder.firstLastName.setText(user.getFirstName() + " " + user.getLastName());
         holder.login.setText(user.getLogin());
-        holder.login.setText(user.getPassword());
+        holder.password.setText(user.getPassword());
     }
 
     @Override
@@ -50,7 +50,7 @@ public class StaffAdapter extends RecyclerView.Adapter<StaffAdapter.ViewHolder>{
             super(view);
             firstLastName = view.findViewById(R.id.firstname_lastname_text_view);
             login = view.findViewById(R.id.login_text_view);
-            password = view.findViewById(R.id.password);
+            password = view.findViewById(R.id.password_text_view);
         }
     }
 }

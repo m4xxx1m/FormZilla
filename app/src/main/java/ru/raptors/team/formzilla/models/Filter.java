@@ -2,17 +2,12 @@ package ru.raptors.team.formzilla.models;
 
 import android.content.Context;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import ru.raptors.team.formzilla.databases.FiltersDatabase;
-import ru.raptors.team.formzilla.databases.QuestionsDatabase;
-import ru.raptors.team.formzilla.enums.OnAnsweredListenerEnum;
 import ru.raptors.team.formzilla.interfaces.Action;
-import ru.raptors.team.formzilla.interfaces.OnAnsweredListener;
-import ru.raptors.team.formzilla.interfaces.Saveable;
 
-public class Filter implements Saveable {
+public class Filter {
     public String ID;
     public String filter;
     public String category;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -64,7 +65,6 @@ public class FormsDatabase {
 
     public int update(Form form) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_ID, form.getID());
         contentValues.put(COLUMN_STATUS, new FormStatus(form.getStatus()).toString());
         contentValues.put(COLUMN_TITLE, form.title);
         contentValues.put(COLUMN_QUESTIONS, form.packQuestions());

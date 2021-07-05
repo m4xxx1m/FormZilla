@@ -35,7 +35,7 @@
     <string name="you_accept">Регистрируясь, вы принимаете условия</string>
     <string name="company_name">Название\nкомпании:</string>
     <string name="enter_answer">Введите ответ...</string>
-    <string name="completed_forms">Пройденные опросы</string>
+    <string name="passed_forms">Пройденные опросы</string>
     <string name="created_forms">Созданные опросы</string>
     <string name="staff">Сотрудники</string>
     <string name="create_form">Создать опрос</string>
