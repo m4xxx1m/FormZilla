@@ -33,22 +33,13 @@ import ru.raptors.team.formzilla.models.User;
  */
 public class CreatedFormsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     public final static String FORM = "form";
 
     private ConstraintLayout placeHolder;
 
-    // TODO: Rename and change types of parameters
-
     public CreatedFormsFragment() {
-        // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static CreatedFormsFragment newInstance() {
         CreatedFormsFragment fragment = new CreatedFormsFragment();
         Bundle args = new Bundle();
@@ -60,15 +51,11 @@ public class CreatedFormsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_created_forms, container, false);
     }
 

@@ -39,4 +39,8 @@
     <string name="created_forms">Созданные опросы</string>
     <string name="staff">Сотрудники</string>
     <string name="create_form">Создать опрос</string>
+    <string name="reiteration">Повторение</string>
+    <string name="field_cant_be_empty">Поле не должно быть пустым</string>
+    <string name="anonymous_mod">Анонимный режим</string>
+    <string name="add_filters">Добавить фильтры</string>
 </resources>

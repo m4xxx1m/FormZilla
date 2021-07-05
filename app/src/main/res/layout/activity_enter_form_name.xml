@@ -59,11 +59,12 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/go_to_create_form_activity_button"
         android:layout_width="wrap_content"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
-        android:onClick="goToQuestionCreationActivity"
+        android:onClick="goToFormCreationActivity"
         android:text="@string/Next"
         android:textAllCaps="true"
         app:cornerRadius="12dp" />

@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             app:titleTextColor="@color/white"

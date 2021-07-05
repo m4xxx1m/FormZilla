@@ -1,5 +1,6 @@
 package ru.raptors.team.formzilla.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -20,11 +21,13 @@ import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.fragments.AvailableFormsFragment;
 import ru.raptors.team.formzilla.fragments.CreatedFormsFragment;
 import ru.raptors.team.formzilla.fragments.StaffFragment;
+import ru.raptors.team.formzilla.models.Form;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ConstraintLayout placeHolder;
-    RecyclerView availableFormsRecyclerView;
+    private RecyclerView availableFormsRecyclerView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -32,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         placeHolder = findViewById(R.id.place_holder);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             }
                             case R.id.passedForms:{
-
+                                openCompletedForms();
                                 break;
                             }
                             case R.id.createdForms:{
@@ -68,12 +71,30 @@ public class MainActivity extends AppCompatActivity {
                                 openStaffFragment();
                                 break;
                             }
+                            case R.id.create_form:{
+                                openCreateFormActivity();
+                                item.setChecked(false);
+                                item.setCheckable(false);
+                                break;
+                            }
                         }
                         item.setChecked(true);
                         mDrawerLayout.closeDrawers();
                         return true;
                     }
                 });
+    }
+
+    private void openCreateFormActivity() {
+        Form form = new Form();
+        Intent createFormIntent = new Intent(MainActivity.this ,
+                EnterFormNameActivity.class);
+        createFormIntent.putExtra(CreatedFormsFragment.FORM, form);
+        startActivity(createFormIntent);
+    }
+
+    private void openCompletedForms() {
+        toolbar.setTitle(R.string.completed_forms);
     }
 
     private void openAvailableFormsFragment()
@@ -85,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.place_holder, availableFormsFragment)
                 .commit();
+        toolbar.setTitle(R.string.available_forms);
     }
 
     private void openCreatedFormsFragment()
@@ -96,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.place_holder, createdFormsFragment)
                 .commit();
+        toolbar.setTitle(R.string.created_forms);
     }
 
     private void openStaffFragment()
@@ -107,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.place_holder, staffFragment)
                 .commit();
+        toolbar.setTitle(R.string.staff);
     }
 
     @Override
