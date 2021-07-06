@@ -20,11 +20,13 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import com.google.android.material.navigation.NavigationView;
 import ru.raptors.team.formzilla.R;
+import ru.raptors.team.formzilla.databases.NowUserDatabase;
 import ru.raptors.team.formzilla.fragments.AvailableFormsFragment;
 import ru.raptors.team.formzilla.fragments.CreatedFormsFragment;
 import ru.raptors.team.formzilla.fragments.PassedFormsFragment;
 import ru.raptors.team.formzilla.fragments.StaffFragment;
 import ru.raptors.team.formzilla.models.Form;
+import ru.raptors.team.formzilla.models.User;
 
 public class MainActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
@@ -49,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
         supportActionBar.setHomeAsUpIndicator(indicator);
         supportActionBar.setDisplayHomeAsUpEnabled(true);
         mDrawerLayout = findViewById(R.id.drawer);
+
+        NowUserDatabase nowUserDatabase = new NowUserDatabase(this);
+        User nowUser = nowUserDatabase.select();
+        nowUser.loadUserFromFirebase(getApplicationContext(), MainActivity.this);
+        nowUser.loadStaffFromFirebase(this);
 
         openAvailableFormsFragment();
 
@@ -89,7 +96,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: кнопка выхода
+                getApplicationContext().deleteDatabase("nowUser.db");
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

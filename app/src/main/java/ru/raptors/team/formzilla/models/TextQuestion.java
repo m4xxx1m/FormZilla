@@ -21,6 +21,7 @@ public class TextQuestion extends Question {
 
     public TextQuestion(DataSnapshot dataSnapshot) {
         super();
+        questionType = QuestionTypeEnum.TextAnswer;
         if(dataSnapshot.hasChild("Question")) question = dataSnapshot.child("Question").getValue(String.class);
         if(dataSnapshot.hasChild("Type")) questionType = new QuestionType(dataSnapshot.child("Type").getValue(String.class)).questionTypeEnum;
         if(dataSnapshot.hasChild("UserAnswers")) {

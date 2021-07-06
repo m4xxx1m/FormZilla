@@ -28,37 +28,45 @@ public class LoginActivity extends AppCompatActivity {
         findAndSetViews();
         // писать ниже
 
-        getApplicationContext().deleteDatabase("users.db");
+
+        //getApplicationContext().deleteDatabase("nowUser.db");
+
+/*        getApplicationContext().deleteDatabase("users.db");
         getApplicationContext().deleteDatabase("nowUser.db");
         getApplicationContext().deleteDatabase("forms.db");
-        getApplicationContext().deleteDatabase("questions.db");
+        getApplicationContext().deleteDatabase("questions.db");*/
 
-        findViewById(R.id.continue_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final User user = new User();
-                user.loadUserFromFirebaseAndDoAction(loginEditText.getText().toString(), passwordEditText.getText().toString(), new Action() {
-                    @Override
-                    public void run() {
-                        user.save(getApplicationContext());
-                        NowUserDatabase nowUserDatabase = new NowUserDatabase(getApplicationContext());
-                        if(!nowUserDatabase.hasNowUser()) {
+        Context context = getApplicationContext();
+        NowUserDatabase nowUserDatabase = new NowUserDatabase(context);
+        User nowUser = new NowUserDatabase(context).select();
+        if(nowUser != null)
+        {
+            goToMainActivity();
+        }
+        else {
+            findViewById(R.id.continue_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    User user = new User();
+                    user.loadUserFromFirebaseAndDoAction(loginEditText.getText().toString(), passwordEditText.getText().toString(), new Action() {
+                        @Override
+                        public void run() {
+                            user.save(context);
                             nowUserDatabase.insert(loginEditText.getText().toString(), passwordEditText.getText().toString(), user.getID());
-                        } else
-                            nowUserDatabase.update(loginEditText.getText().toString(), passwordEditText.getText().toString(), user.getID());
-                        goToMainActivity();
-                    }
-                }, getApplicationContext(), LoginActivity.this);
-            }
-        });
-        findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+                            goToMainActivity();
+                        }
+                    }, context, LoginActivity.this);
+                }
+            });
+            findViewById(R.id.sign_up).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
     }
 
     private void goToMainActivity()

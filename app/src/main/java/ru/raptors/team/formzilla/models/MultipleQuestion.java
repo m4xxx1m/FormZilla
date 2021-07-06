@@ -32,14 +32,14 @@ public abstract class MultipleQuestion extends Question{
         String result = "";
         for(String answer : answers)
         {
-            result += answer + " ";
+            result += answer + "%regex%";
         }
         return result;
     }
 
     public void unpackAnswers(String pack)
     {
-        String[] unpackedAnswers = pack.split(" ");
+        String[] unpackedAnswers = pack.split("%regex%");
         answers = Arrays.asList(unpackedAnswers);
     }
 }

@@ -25,7 +25,7 @@ public class PassedFormsAdapter extends RecyclerView.Adapter<PassedFormsAdapter.
     @Override
     public PassedFormsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = inflater.inflate(R.layout.available_form_item, parent, false);
+        View view = inflater.inflate(R.layout.passed_form_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -46,8 +46,8 @@ public class PassedFormsAdapter extends RecyclerView.Adapter<PassedFormsAdapter.
         final TextView questionsCount;
         ViewHolder(View view){
             super(view);
-            title = view.findViewById(R.id.createdFormTitle);
-            questionsCount = view.findViewById(R.id.createdFormQuestionsCount);
+            title = view.findViewById(R.id.passed_form_title);
+            questionsCount = view.findViewById(R.id.passed_form_questions_count);
         }
     }
 }

@@ -18,6 +18,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.enums.FormStatusEnum;
+import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.fragments.CreatedFormsFragment;
 import ru.raptors.team.formzilla.models.Form;
 import ru.raptors.team.formzilla.models.MultiAnswersQuestion;
@@ -57,13 +58,13 @@ public class CreateQuestionActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked)
                 {
-                    question = new TextQuestion();
+                    CreateQuestionActivity.this.question = new TextQuestion();
                     answersPlaceHolder.removeView(answersLayout);
                     answersPlaceHolder.removeView(addAnswerLayout);
                     placeHolder.removeView(multipleAnswerSwitch);
                 }
                 else {
-                    question = new SingleAnswerQuestion();
+                    CreateQuestionActivity.this.question = new SingleAnswerQuestion();
                     answersPlaceHolder.addView(answersLayout);
                     answersPlaceHolder.addView(addAnswerLayout);
                     placeHolder.addView(multipleAnswerSwitch);
@@ -148,7 +149,7 @@ public class CreateQuestionActivity extends AppCompatActivity {
         {
             case TextAnswer:
             {
-                this.question = (TextQuestion) question;
+                question = (TextQuestion) question;
                 break;
             }
             default:

@@ -64,6 +64,63 @@ public class User implements Serializable {
         return result;
     }
 
+    public void loadStaffFromFirebase(Context context)
+    {
+        for(User employee : staff) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts").child(employee.ID);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataEmployee) {
+                    if (dataEmployee.exists()) {
+                        if (dataEmployee.hasChild("Login"))
+                            employee.setLogin(dataEmployee.child("Login").getValue(String.class));
+                        if (dataEmployee.hasChild("Password"))
+                            employee.password = dataEmployee.child("Password").getValue(String.class);
+                        if (dataEmployee.hasChild("FirstName"))
+                            employee.firstName = dataEmployee.child("FirstName").getValue(String.class);
+                        if (dataEmployee.hasChild("LastName"))
+                            employee.lastName = dataEmployee.child("LastName").getValue(String.class);
+                        employee.save(context);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
+    }
+
+    public void loadUserFromFirebase(Context context, Activity activity)
+    {
+        User result = null;
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts").child(ID);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!activity.isFinishing()) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot dataUser : snapshot.getChildren()) {
+                            if (dataUser.hasChild("Login")) login = dataUser.child("Login").getValue(String.class);
+                            if (dataUser.hasChild("Password")) password = dataUser.child("Password").getValue(String.class);
+                            if (dataUser.hasChild("FirstName")) firstName = dataUser.child("FirstName").getValue(String.class);
+                            if (dataUser.hasChild("LastName")) lastName = dataUser.child("LastName").getValue(String.class);
+                            if (dataUser.hasChild("Gender")) gender = new Gender(dataUser.child("Gender").getValue(String.class)).getGender();
+                            if (dataUser.hasChild("Company")) company = dataUser.child("Company").getValue(String.class);
+                            if (dataUser.hasChild("CompanyID")) companyID = dataUser.child("CompanyID").getValue(String.class);
+                            if (dataUser.hasChild("Staff")) unpackStaff(dataUser.child("Staff").getValue(String.class), context);
+                            getFormsFromFirebaseAndDoAction(null, context, activity);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
     // метод загружает данные о пользователе по логину и паролю
     public void loadUserFromFirebaseAndDoAction(String enteredLogin, String enteredPassword, Action action, Context context, Activity activity)
     {
@@ -82,6 +139,8 @@ public class User implements Serializable {
                             if (dataUser.hasChild("Password"))
                                 password = dataUser.child("Password").getValue(String.class);
                             if (login.equals(enteredLogin) && password.equals(enteredPassword)) {
+                                User.this.login = login;
+                                User.this.password = password;
                                 if (dataUser.hasChild("FirstName"))
                                     firstName = dataUser.child("FirstName").getValue(String.class);
                                 if (dataUser.hasChild("LastName"))
@@ -147,6 +206,12 @@ public class User implements Serializable {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
+
+    public void passForm(Form passedForm)
+    {
+        forms.remove(findFormByID(passedForm.getID()));
+        forms.add(passedForm);
     }
 
     // загружает все пройденные формы с результатами на Firebase

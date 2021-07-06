@@ -24,7 +24,6 @@ public class NowUserDatabase implements Serializable {
     private static final String COLUMN_PASSWORD = "password";
     private static final String COLUMN_USER_ID = "user_id";
 
-    private static final int NUM_COLUMN_ID = 0;
     private static final int NUM_COLUMN_LOGIN = 1;
     private static final int NUM_COLUMN_PASSWORD = 2;
     private static final int NUM_COLUMN_USER_ID = 3;
@@ -54,12 +53,6 @@ public class NowUserDatabase implements Serializable {
             contentValues.put(COLUMN_USER_ID, userID);
         }
         return database.insert(TABLE_NAME, null, contentValues);
-
-/*        else
-        {
-            update(login, password, userID);
-            return -1;
-        }*/
     }
 
     public int update(String login, String password, String userID) {
@@ -75,8 +68,8 @@ public class NowUserDatabase implements Serializable {
         database.delete(TABLE_NAME, null, null);
     }
 
-    public void delete(String id) {
-        database.delete(TABLE_NAME, COLUMN_ID + " = ?", new String[] { String.valueOf(id) });
+    public void delete() {
+        database.delete(TABLE_NAME, COLUMN_ID + " = ?", new String[] { String.valueOf(1) });
     }
 
     public User select() {

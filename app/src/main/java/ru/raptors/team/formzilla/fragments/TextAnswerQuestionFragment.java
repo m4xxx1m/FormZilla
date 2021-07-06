@@ -13,13 +13,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.activities.AnswerQuestionActivity;
 import ru.raptors.team.formzilla.activities.MainActivity;
+import ru.raptors.team.formzilla.databases.NowUserDatabase;
+import ru.raptors.team.formzilla.enums.FormStatusEnum;
 import ru.raptors.team.formzilla.models.Form;
 import ru.raptors.team.formzilla.models.MultiAnswersQuestion;
 import ru.raptors.team.formzilla.models.TextQuestion;
+import ru.raptors.team.formzilla.models.User;
 
 public class TextAnswerQuestionFragment extends Fragment {
 
@@ -61,6 +65,7 @@ public class TextAnswerQuestionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         TextQuestion question = (TextQuestion) formToPass.questions.get(questionNumber);
         TextView questionTextView = view.findViewById(R.id.text_question);
+        TextInputEditText inputTextAnswer = view.findViewById(R.id.text_answer);
         questionTextView.setText(question.question);
         AnswerQuestionActivity answerQuestionActivity = (AnswerQuestionActivity) getActivity();
         MaterialButton materialButton = getActivity().findViewById(R.id.to_next_question);
@@ -68,18 +73,21 @@ public class TextAnswerQuestionFragment extends Fragment {
             materialButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    switch (formToPass.questions.get(questionNumber + 1).questionType) {
-                        case TextAnswer:
-                            answerQuestionActivity.openTextQuestionFragment(questionNumber + 1);
-                            break;
+                    if(!inputTextAnswer.getText().toString().trim().isEmpty()) {
+                        question.answer = inputTextAnswer.getText().toString();
+                        switch (formToPass.questions.get(questionNumber + 1).questionType) {
+                            case TextAnswer:
+                                answerQuestionActivity.openTextQuestionFragment(questionNumber + 1);
+                                break;
 
-                        case SingleAnswer:
-                            answerQuestionActivity.openSingleAnswerQuestionFragment(questionNumber + 1);
-                            break;
+                            case SingleAnswer:
+                                answerQuestionActivity.openSingleAnswerQuestionFragment(questionNumber + 1);
+                                break;
 
-                        case MultiAnswer:
-                            answerQuestionActivity.openMultiAnswerQuestionFragment(questionNumber + 1);
-                            break;
+                            case MultiAnswer:
+                                answerQuestionActivity.openMultiAnswerQuestionFragment(questionNumber + 1);
+                                break;
+                        }
                     }
                 }
             });
@@ -89,9 +97,20 @@ public class TextAnswerQuestionFragment extends Fragment {
             materialButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent goToMainMenuIntent = new Intent(getActivity(),
-                            MainActivity.class);
-                    startActivity(goToMainMenuIntent);
+                    if(!inputTextAnswer.getText().toString().trim().isEmpty()) {
+                        question.answer = inputTextAnswer.getText().toString();
+                        formToPass.setStatus(FormStatusEnum.Passed);
+                        formToPass.save(getContext());
+                        User nowUser = User.getNowUser(getContext());
+                        nowUser.passForm(formToPass);
+                        nowUser.uploadFormToFirebase(formToPass);
+                        Intent goToMainMenuIntent = new Intent(getActivity(),
+                                MainActivity.class);
+                        startActivity(goToMainMenuIntent);
+                    }
+                    else {
+                        // вывод предепреждения
+                    }
                 }
             });
         }

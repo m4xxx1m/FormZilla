@@ -1,6 +1,5 @@
 package ru.raptors.team.formzilla.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -8,15 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.activities.AnswerQuestionActivity;
-import ru.raptors.team.formzilla.activities.EnterFormNameActivity;
-import ru.raptors.team.formzilla.activities.MainActivity;
 import ru.raptors.team.formzilla.models.Form;
 
 public class AvailableFormAdapter extends RecyclerView.Adapter<AvailableFormAdapter.ViewHolder>{
@@ -64,8 +60,8 @@ public class AvailableFormAdapter extends RecyclerView.Adapter<AvailableFormAdap
         final View availableFormItem;
         ViewHolder(View view){
             super(view);
-            title = view.findViewById(R.id.availableFormTitle);
-            questionsCount = view.findViewById(R.id.availableFormQuestionsCount);
+            title = view.findViewById(R.id.passed_form_title);
+            questionsCount = view.findViewById(R.id.passed_form_questions_count);
             availableFormItem = view.findViewById(R.id.available_form_layout);
         }
     }

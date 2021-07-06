@@ -81,7 +81,7 @@ public class Form implements Serializable {
         }
     }
 
-    // Todo: здесь форма должна отправляться всем сотрудникам. которые указаны в staff
+    // Здесь форма отправляется всем сотрудникам. которые указаны в staff
     public void sendToStaff()
     {
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();

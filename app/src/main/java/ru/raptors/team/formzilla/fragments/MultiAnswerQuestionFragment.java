@@ -20,9 +20,12 @@ import com.google.android.material.button.MaterialButton;
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.activities.AnswerQuestionActivity;
 import ru.raptors.team.formzilla.activities.MainActivity;
+import ru.raptors.team.formzilla.databases.NowUserDatabase;
+import ru.raptors.team.formzilla.enums.FormStatusEnum;
 import ru.raptors.team.formzilla.models.Form;
 import ru.raptors.team.formzilla.models.MultiAnswersQuestion;
 import ru.raptors.team.formzilla.models.SingleAnswerQuestion;
+import ru.raptors.team.formzilla.models.User;
 
 public class MultiAnswerQuestionFragment extends Fragment {
 
@@ -78,18 +81,31 @@ public class MultiAnswerQuestionFragment extends Fragment {
             materialButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    switch (formToPass.questions.get(questionNumber + 1).questionType) {
-                        case TextAnswer:
-                            answerQuestionActivity.openTextQuestionFragment(questionNumber + 1);
-                            break;
+                    for(int i = 0; i < checkboxPlace.getChildCount(); i++)
+                    {
+                        CheckBox checkBox = (CheckBox) checkboxPlace.getChildAt(i);
+                        if(checkBox.isChecked())
+                        {
+                            question.selectedAnswers.add(checkBox.getText().toString());
+                        }
+                    }
+                    if(question.selectedAnswers.size() > 0) {
+                        switch (formToPass.questions.get(questionNumber + 1).questionType) {
+                            case TextAnswer:
+                                answerQuestionActivity.openTextQuestionFragment(questionNumber + 1);
+                                break;
 
-                        case SingleAnswer:
-                            answerQuestionActivity.openSingleAnswerQuestionFragment(questionNumber + 1);
-                            break;
+                            case SingleAnswer:
+                                answerQuestionActivity.openSingleAnswerQuestionFragment(questionNumber + 1);
+                                break;
 
-                        case MultiAnswer:
-                            answerQuestionActivity.openMultiAnswerQuestionFragment(questionNumber + 1);
-                            break;
+                            case MultiAnswer:
+                                answerQuestionActivity.openMultiAnswerQuestionFragment(questionNumber + 1);
+                                break;
+                        }
+                    }
+                    else {
+                        // вывод предупреждения - выберете хотя бы один ответ
                     }
                 }
             });
@@ -97,11 +113,30 @@ public class MultiAnswerQuestionFragment extends Fragment {
         else{
             materialButton.setText(R.string.done);
             materialButton.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
-                    Intent goToMainMenuIntent = new Intent(getActivity(),
-                            MainActivity.class);
-                    startActivity(goToMainMenuIntent);
+                    for(int i = 0; i < checkboxPlace.getChildCount(); i++)
+                    {
+                        CheckBox checkBox = (CheckBox) checkboxPlace.getChildAt(i);
+                        if(checkBox.isChecked())
+                        {
+                            question.selectedAnswers.add(checkBox.getText().toString());
+                        }
+                    }
+                    if(question.selectedAnswers.size() > 0) {
+                        formToPass.setStatus(FormStatusEnum.Passed);
+                        formToPass.save(getContext());
+                        User nowUser = User.getNowUser(getContext());
+                        nowUser.passForm(formToPass);
+                        nowUser.uploadFormToFirebase(formToPass);
+                        Intent goToMainMenuIntent = new Intent(getActivity(),
+                                MainActivity.class);
+                        startActivity(goToMainMenuIntent);
+                    }
+                    else {
+                        // вывод предупреждения - выберете хотя бы один ответ
+                    }
                 }
             });
         }
