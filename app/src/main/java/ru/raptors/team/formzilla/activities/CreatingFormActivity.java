@@ -8,8 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+
+import java.util.ArrayList;
+
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.fragments.CreatedFormsFragment;
+import ru.raptors.team.formzilla.models.Filter;
 import ru.raptors.team.formzilla.models.Form;
 
 public class CreatingFormActivity extends AppCompatActivity {
@@ -19,6 +23,7 @@ public class CreatingFormActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
     private AutoCompleteTextView autoCompleteTextView;
     private Form form;
+    private ArrayList<Filter> filters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +42,20 @@ public class CreatingFormActivity extends AppCompatActivity {
         autoCompleteTextView.setText(options[0], false);
         getFormFromPreviousActivity();
         toolbar.setTitle(form.title);
+        findViewById(R.id.add_filter).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void getFormFromPreviousActivity() {
         form = (Form) getIntent().getSerializableExtra(CreatedFormsFragment.FORM);
+    }
+
+    public void addFilter(Filter filter) {
+
     }
 
     public void goToFormCreationActivity(View v)
