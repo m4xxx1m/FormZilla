@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import ru.raptors.team.formzilla.databases.NowUserDatabase;
@@ -21,7 +22,7 @@ import ru.raptors.team.formzilla.enums.GenderEnum;
 import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.Action;
 
-public class User {
+public class User implements Serializable {
     private String ID;
     private String login;
     private String password;

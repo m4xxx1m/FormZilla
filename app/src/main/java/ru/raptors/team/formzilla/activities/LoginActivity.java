@@ -28,10 +28,10 @@ public class LoginActivity extends AppCompatActivity {
         findAndSetViews();
         // писать ниже
 
-/*        getApplicationContext().deleteDatabase("users.db");
+        getApplicationContext().deleteDatabase("users.db");
         getApplicationContext().deleteDatabase("nowUser.db");
         getApplicationContext().deleteDatabase("forms.db");
-        getApplicationContext().deleteDatabase("questions.db");*/
+        getApplicationContext().deleteDatabase("questions.db");
 
         findViewById(R.id.continue_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,5 +74,4 @@ public class LoginActivity extends AppCompatActivity {
         loginEditText = findViewById(R.id.login_enter_text);
         passwordEditText = findViewById(R.id.password_edit_text);
     }
-
 }

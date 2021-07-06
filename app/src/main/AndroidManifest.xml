@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FormZilla">
         <activity android:name=".activities.CreatingFormActivity" />
-        <activity android:name=".activities.QuestionActivity" />
+        <activity android:name=".activities.AnswerQuestionActivity" />
         <activity android:name=".activities.NewEmployeeActivity" />
         <activity android:name=".activities.EnterFormNameActivity" />
         <activity android:name=".activities.CreateQuestionActivity" />
