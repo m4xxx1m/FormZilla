@@ -43,4 +43,7 @@
     <string name="field_cant_be_empty">Поле не должно быть пустым</string>
     <string name="anonymous_mod">Анонимный режим</string>
     <string name="add_filters">Добавить фильтры</string>
+    <string name="login_">Логин:</string>
+    <string name="password_">Пароль:</string>
+    <string name="log_out">Выйти</string>
 </resources>
