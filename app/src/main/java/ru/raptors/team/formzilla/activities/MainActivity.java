@@ -2,7 +2,9 @@ package ru.raptors.team.formzilla.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -84,6 +86,13 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
                 });
+        findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: кнопка выхода
+                Log.d("myDebug", "log out");
+            }
+        });
     }
 
     private void openCreateFormActivity() {
