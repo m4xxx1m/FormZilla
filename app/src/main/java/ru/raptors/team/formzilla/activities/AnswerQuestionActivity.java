@@ -64,7 +64,7 @@ public class AnswerQuestionActivity extends AppCompatActivity {
         });
     }
 
-    private void openTextQuestionFragment(int questionNum)
+    public void openTextQuestionFragment(int questionNum)
     {
         placeHolder.removeAllViews();
         TextAnswerQuestionFragment textAnswerQuestionFragment = TextAnswerQuestionFragment.newInstance(formToPass, questionNum);
@@ -75,7 +75,7 @@ public class AnswerQuestionActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void openSingleAnswerQuestionFragment(int questionNum)
+    public void openSingleAnswerQuestionFragment(int questionNum)
     {
         placeHolder.removeAllViews();
         SingleAnswerQuestionFragment singleAnswerQuestionFragment = SingleAnswerQuestionFragment.newInstance(formToPass, questionNum);
@@ -86,7 +86,7 @@ public class AnswerQuestionActivity extends AppCompatActivity {
                 .commit();
     }
 
-    private void openMultiAnswerQuestionFragment(int questionNum)
+    public void openMultiAnswerQuestionFragment(int questionNum)
     {
         placeHolder.removeAllViews();
         MultiAnswerQuestionFragment multiAnswerQuestionFragment = MultiAnswerQuestionFragment.newInstance(formToPass, questionNum);

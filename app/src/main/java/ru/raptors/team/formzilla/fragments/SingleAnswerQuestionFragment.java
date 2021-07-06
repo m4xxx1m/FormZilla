@@ -1,6 +1,7 @@
 package ru.raptors.team.formzilla.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,7 +15,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.android.material.button.MaterialButton;
+
 import ru.raptors.team.formzilla.R;
+import ru.raptors.team.formzilla.activities.AnswerQuestionActivity;
+import ru.raptors.team.formzilla.activities.EnterFormNameActivity;
+import ru.raptors.team.formzilla.activities.MainActivity;
 import ru.raptors.team.formzilla.models.Form;
 import ru.raptors.team.formzilla.models.Question;
 import ru.raptors.team.formzilla.models.SingleAnswerQuestion;
@@ -61,11 +67,43 @@ public class SingleAnswerQuestionFragment extends Fragment {
         SingleAnswerQuestion question = (SingleAnswerQuestion) formToPass.questions.get(questionNumber);
         TextView questionTextView = view.findViewById(R.id.text_question);
         questionTextView.setText(question.question);
-        for(String answer : question.answers)
-        {
+        for (String answer : question.answers) {
             RadioButton radioButton = new RadioButton(getContext());
             radioButton.setText(answer);
             answersRadioGroup.addView(radioButton);
+        }
+        AnswerQuestionActivity answerQuestionActivity = (AnswerQuestionActivity) getActivity();
+        MaterialButton materialButton = getActivity().findViewById(R.id.to_next_question);
+        if (questionNumber + 1 < formToPass.questions.size()) {
+            materialButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switch (formToPass.questions.get(questionNumber + 1).questionType) {
+                        case TextAnswer:
+                            answerQuestionActivity.openTextQuestionFragment(questionNumber + 1);
+                            break;
+
+                        case SingleAnswer:
+                            answerQuestionActivity.openSingleAnswerQuestionFragment(questionNumber + 1);
+                            break;
+
+                        case MultiAnswer:
+                            answerQuestionActivity.openMultiAnswerQuestionFragment(questionNumber + 1);
+                            break;
+                    }
+                }
+            });
+        }
+        else{
+            materialButton.setText(R.string.done);
+            materialButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent goToMainMenuIntent = new Intent(getActivity(),
+                            MainActivity.class);
+                    startActivity(goToMainMenuIntent);
+                }
+            });
         }
     }
 }
