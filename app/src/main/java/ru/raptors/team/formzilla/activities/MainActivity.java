@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // TODO: кнопка выхода
-                Log.d("myDebug", "log out");
             }
         });
     }
