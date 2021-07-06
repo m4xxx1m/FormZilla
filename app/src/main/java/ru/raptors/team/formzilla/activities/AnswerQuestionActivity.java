@@ -4,11 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.RelativeLayout;
-
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.fragments.AvailableFormsFragment;
 import ru.raptors.team.formzilla.fragments.CreatedFormsFragment;
@@ -35,6 +34,12 @@ public class AnswerQuestionActivity extends AppCompatActivity {
         getFormFromPreviousActivity();
         findAndSetViews();
         toolbar.setTitle(formToPass.title);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         // писать ниже
         switch (formToPass.questions.get(0).questionType)
@@ -51,6 +56,12 @@ public class AnswerQuestionActivity extends AppCompatActivity {
                 openMultiAnswerQuestionFragment(0);
                 break;
         }
+        findViewById(R.id.to_next_question).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // next button
+            }
+        });
     }
 
     private void openTextQuestionFragment(int questionNum)
