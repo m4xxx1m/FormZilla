@@ -58,6 +58,8 @@ public class CreatingFormActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
 
+            // TODO: здесь принимаем результат и добавляем фильтр на экран
+            // Для getExtra используй ChoosingFiltersActivity.INTENT_NAME
         }
     }
 

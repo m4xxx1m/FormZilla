@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.TextView;
 
 import ru.raptors.team.formzilla.R;
 
@@ -17,12 +18,14 @@ public class FiltersAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        return 0;
+        return 10;
+        // TODO: здесь изменяем количество категорий
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return 0;
+        return 10;
+        // TODO: здесь изменяем количество фильтров в каждой категории
     }
 
     @Override
@@ -57,6 +60,8 @@ public class FiltersAdapter extends BaseExpandableListAdapter {
                     .LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_view_group_view, null);
         }
+        //((TextView)convertView.findViewById(R.id.tv_group_view)).setText("");
+        // TODO: здесь изменяем текст категории
         return convertView;
     }
 
@@ -67,11 +72,13 @@ public class FiltersAdapter extends BaseExpandableListAdapter {
                     .LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.list_view_child_view, null);
         }
+        //((TextView)convertView.findViewById(R.id.tv_group_view)).setText("");
+        // TODO: здесь изменяем текст фильтра
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 }
