@@ -3,6 +3,7 @@ package ru.raptors.team.formzilla.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import java.util.ArrayList;
 
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.enums.FormStatusEnum;
@@ -47,13 +50,19 @@ public class CreateQuestionActivity extends AppCompatActivity {
     private boolean createFilter = false;
 
     private Question question;
+    private Question questionFromPreviousActivity;
 
+    @SuppressLint("ResourceType")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_question);
         findAndSetViews();
         getFormFromPreviousActivity();
+        question = new SingleAnswerQuestion();
+        if(getIntent().hasExtra(CreatedFormsFragment.QUESTION)) {
+            questionFromPreviousActivity = (Question) getIntent().getSerializableExtra(CreatedFormsFragment.QUESTION);
+        }
         // писать ниже
         question = new SingleAnswerQuestion();
         //setSupportActionBar(toolbar);
@@ -100,19 +109,42 @@ public class CreateQuestionActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Костя, это кнопка предыдущий вопрос
+                // Кнопка предыдущий вопрос
+                CreateQuestionActivity.this.finish();
+
             }
         });
+        if(questionFromPreviousActivity == null || !containsQuestion(form.questions, questionFromPreviousActivity)) {
+            toolbar.getMenu().findItem(R.id.next_button).setVisible(false);
+        }
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.next_button) {
-                    // TODO: Костя, это кнопка следующий вопрос
+                    // Кнопка следующий вопрос
+                    Intent createFormIntent = new Intent(CreateQuestionActivity.this, CreateQuestionActivity.class);
+                    createFormIntent.putExtra(CreatedFormsFragment.FORM, form);
+                    //nextQuestion = form.questions.get(form.questions.indexOf(question) + 1);
+                    //createFormIntent.putExtra(CreatedFormsFragment.QUESTION, question);
+                    startActivity(createFormIntent);
                     return true;
                 }
                 return false;
             }
         });
+    }
+
+    private boolean containsQuestion(ArrayList<Question> questions, Question question)
+    {
+        boolean result = false;
+        for(Question formQuestion : questions)
+        {
+            if (formQuestion.getID().equals(question.getID())) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 
     private void findAndSetViews()
@@ -198,9 +230,8 @@ public class CreateQuestionActivity extends AppCompatActivity {
         }
         else if(createFilter) result = false;
         if (result) form.questions.add(question);
-        else {
-            errorText.setVisibility(View.VISIBLE);
-        }
+        else errorText.setVisibility(View.VISIBLE);
+
         return result;
     }
 

@@ -12,8 +12,12 @@ import java.util.List;
 
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.models.Form;
+import ru.raptors.team.formzilla.models.Helper;
 
 public class CreatedFormsAdapter extends RecyclerView.Adapter<CreatedFormsAdapter.ViewHolder>{
+
+    // внимание! на строчке снизу КОСТЫЛЬ
+    public static int[] userAnswerCount = new int[1500];
 
     private LayoutInflater inflater;
     private List<Form> createdForms;
@@ -33,7 +37,8 @@ public class CreatedFormsAdapter extends RecyclerView.Adapter<CreatedFormsAdapte
     public void onBindViewHolder(CreatedFormsAdapter.ViewHolder holder, int position) {
         Form form = createdForms.get(position);
         holder.title.setText(form.title);
-        holder.questionsCount.setText(Integer.toString(form.questions.size()) + " вопрос");
+        holder.questionsCount.setText(Integer.toString(form.questions.size()) + " " + Helper.getWordQuestionInRightForm(form.questions.size()));
+        holder.passedFormAccountsCount.setText(Integer.toString(userAnswerCount[position]));
     }
 
     @Override
@@ -44,10 +49,12 @@ public class CreatedFormsAdapter extends RecyclerView.Adapter<CreatedFormsAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView title;
         final TextView questionsCount;
+        final TextView passedFormAccountsCount;
         ViewHolder(View view){
             super(view);
             title = view.findViewById(R.id.createdFormTitle);
             questionsCount = view.findViewById(R.id.createdFormQuestionsCount);
+            passedFormAccountsCount = view.findViewById(R.id.passedFormAccountsCount);
         }
     }
 }

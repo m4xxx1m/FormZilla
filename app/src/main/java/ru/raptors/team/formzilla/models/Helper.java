@@ -17,13 +17,13 @@ public class Helper {
         String[] w1 = {"Super", "Mega", "Pro", "Unreal", "Anti", "", "Cool", "Big", "Little" ,"Mr.", "Alpha", "", "sA_", "Ultra",
                 "MC.", "DJ.", "Pro100", "", "GG_", "SaD_", "Sad", "Cyber","Binary", "", "Black", "Anime", "White", "Trash", "Close",
                 "", "Crazy", "Squeeze", "Easy", "Delta", "Gold", "Silver", "Emerald" };
-        String[] w2 = {"God", "Killer", "Crab", "Sniper", "Hacker", "Daddy", "Dad", "Mum", "Ass", "Dick", "Lololo", "Qwerty", "King",
-                "Noob", "Void", "Winner", "Lemon", "Pisos", "Meat", "Angel", "Nitro", "Ace", "Crusher", "Dragon", "Man", "Boy", "Hit",
+        String[] w2 = {"God", "Killer", "Crab", "Sniper", "Hacker", "Daddy", "Dad", "Mum", "Lololo", "Qwerty", "King",
+                "Noob", "Void", "Winner", "Lemon", "Meat", "Angel", "Nitro", "Ace", "Crusher", "Dragon", "Man", "Boy", "Hit",
                 "Someone", "Cookies", "Noname", "Neko", "Schoolboy", "Kitten", "Chicken", "Time", "Hydra", "Acid", "Riper", "Volcano",
-                "Gangster", "Chastener", "Droid", "Lucker", "Unlucker", "Legend", "Burger", "Penguin", "Crystal", "Agent", "Cock",
+                "Gangster", "Chastener", "Droid", "Lucker", "Unlucker", "Legend", "Burger", "Penguin", "Crystal", "Agent",
                 "Rooster", "Storm", "Zadrot", "Gold", "Silver", "Emerald", "Robot", "Troll", "Doctor" };
-        String[] w3 = {"228", "322", "666", "", "_X", "XXL", "1337", "", "123", "007", "_pro", "", "_YT", "_xD", "0_o", "", "^_^", "~",
-                "<3", "", "Ox", "X", "=.=", "", "Pro" };
+        String[] w3 = {"228", "322", "666", "", "X", "XXL", "1337", "", "123", "007", "_pro", "", "_YT", "_xD", "0_o",
+                "Ox", "X", "", "Pro" };
         int l1 = w1.length;
         int l2 = w2.length;
         int l3 = w3.length;
@@ -46,5 +46,34 @@ public class Helper {
 
         String password = new String(pass);
         return password;
+    }
+
+    public static String getWordQuestionInRightForm(int questionsCount)
+    {
+        String[] variants = new String[]{"вопрос", "вопроса", "вопросов"};
+        switch (questionsCount % 10)
+        {
+            case 0:
+                return variants[2];
+            case 1:
+                return variants[0];
+            case 2:
+                return variants[1];
+            case 3:
+                return variants[1];
+            case 4:
+                return variants[1];
+            case 5:
+                return variants[2];
+            case 6:
+                return variants[2];
+            case 7:
+                return variants[2];
+            case 8:
+                return variants[2];
+            case 9:
+                return variants[2];
+        }
+        return "вопрос";
     }
 }

@@ -35,6 +35,7 @@ import ru.raptors.team.formzilla.models.User;
 public class CreatedFormsFragment extends Fragment {
 
     public final static String FORM = "form";
+    public final static String QUESTION = "question";
 
     private ConstraintLayout placeHolder;
 

@@ -12,6 +12,7 @@ import java.util.List;
 
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.models.Form;
+import ru.raptors.team.formzilla.models.Helper;
 
 public class PassedFormsAdapter extends RecyclerView.Adapter<PassedFormsAdapter.ViewHolder>{
 
@@ -33,7 +34,7 @@ public class PassedFormsAdapter extends RecyclerView.Adapter<PassedFormsAdapter.
     public void onBindViewHolder(PassedFormsAdapter.ViewHolder holder, int position) {
         Form form = passedForms.get(position);
         holder.title.setText(form.title);
-        holder.questionsCount.setText(Integer.toString(form.questions.size()));
+        holder.questionsCount.setText(Integer.toString(form.questions.size()) + " " + Helper.getWordQuestionInRightForm(form.questions.size()));
     }
 
     @Override

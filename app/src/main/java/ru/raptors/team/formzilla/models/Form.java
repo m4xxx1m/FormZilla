@@ -14,6 +14,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import ru.raptors.team.formzilla.adapters.AvailableFormAdapter;
+import ru.raptors.team.formzilla.adapters.CreatedFormsAdapter;
 import ru.raptors.team.formzilla.databases.FormsDatabase;
 import ru.raptors.team.formzilla.enums.FormStatusEnum;
 import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
@@ -26,6 +28,7 @@ public class Form implements Serializable {
     public ArrayList<Question> questions;
     public ArrayList<User> staff;
     private ArrayList<UserAnswer> userAnswers;
+    private int userAnswersCount;
 
     public Form()
     {
@@ -164,7 +167,12 @@ public class Form implements Serializable {
                                 }
                             }
                         }
+                        Form.this.userAnswersCount = Form.this.userAnswers.size();
                         Form.this.save(context);
+                        // здесь начинается костыль
+                        int formIndex = getIndexOfFormInUserForms(context);
+                        if(formIndex != -1 && formIndex < CreatedFormsAdapter.userAnswerCount.length) CreatedFormsAdapter.userAnswerCount[formIndex] = Form.this.userAnswersCount;
+                        // здесь костыль заканчивается
                     }
                 }
 
@@ -174,6 +182,16 @@ public class Form implements Serializable {
                 }
             });
         }
+    }
+
+    private int getIndexOfFormInUserForms(Context context)
+    {
+        ArrayList<Form> userForms = User.getNowUser(context).getForms();
+        for(int i = 0 ; i < userForms.size(); i++)
+        {
+            if(userForms.get(i).getID().equals(ID)) return i;
+        }
+        return -1;
     }
 
     public void save(Context context)
@@ -246,6 +264,15 @@ public class Form implements Serializable {
                 ", status=" + status +
                 ", title='" + title + '\'' +
                 '}';
+    }
+
+    public int getUserAnswersCount()
+    {
+        return userAnswersCount;
+    }
+
+    public void setUserAnswersCount(int userAnswersCount) {
+        this.userAnswersCount = userAnswersCount;
     }
 
     public FormStatusEnum getStatus() {

@@ -25,6 +25,7 @@ public class FormsDatabase {
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_QUESTIONS= "questions";
     private static final String COLUMN_STAFF = "staff";
+    private static final String COLUMN_USER_ANSWERS_COUNT = "userAnswersCount";
     // userAnswers можно не сохранять, там храняться временные значения
 
     private static final int NUM_COLUMN_ID = 0;
@@ -32,6 +33,7 @@ public class FormsDatabase {
     private static final int NUM_COLUMN_TITLE = 2;
     private static final int NUM_COLUMN_QUESTIONS = 3;
     private static final int NUM_COLUMN_STAFF = 4;
+    private static final int NUM_COLUMN_USER_ANSWERS_COUNT = 5;
 
     private SQLiteDatabase database;
 
@@ -43,7 +45,8 @@ public class FormsDatabase {
                     COLUMN_STATUS + " TEXT," +
                     COLUMN_TITLE + " TEXT," +
                     COLUMN_QUESTIONS + " TEXT," +
-                    COLUMN_STAFF + " TEXT)";
+                    COLUMN_STAFF + " TEXT," +
+                    COLUMN_USER_ANSWERS_COUNT + " INTEGER)";
 
     public FormsDatabase (Context context)
     {
@@ -59,6 +62,7 @@ public class FormsDatabase {
         contentValues.put(COLUMN_TITLE, form.title);
         contentValues.put(COLUMN_QUESTIONS, form.packQuestions());
         contentValues.put(COLUMN_STAFF, form.packStaff());
+        contentValues.put(COLUMN_USER_ANSWERS_COUNT, form.getUserAnswersCount());
 
         return database.insert(TABLE_NAME, null, contentValues);
     }
@@ -69,6 +73,7 @@ public class FormsDatabase {
         contentValues.put(COLUMN_TITLE, form.title);
         contentValues.put(COLUMN_QUESTIONS, form.packQuestions());
         contentValues.put(COLUMN_STAFF, form.packStaff());
+        contentValues.put(COLUMN_USER_ANSWERS_COUNT, form.getUserAnswersCount());
 
         return database.update(TABLE_NAME, contentValues, COLUMN_ID + " = ?",new String[] { String.valueOf(form.getID())});
     }
@@ -90,11 +95,13 @@ public class FormsDatabase {
         String title = cursor.getString(NUM_COLUMN_TITLE);
         String questions = cursor.getString(NUM_COLUMN_QUESTIONS);
         String staff = cursor.getString(NUM_COLUMN_STAFF);
+        int userAnswersCount = cursor.getInt(NUM_COLUMN_USER_ANSWERS_COUNT);
         Form result = new Form(id);
         result.setStatus(new FormStatus(status).formStatusEnum);
         result.title = title;
         result.unpackQuestions(questions, context);
         result.unpackStaff(staff);
+        result.setUserAnswersCount(userAnswersCount);
         return result;
     }
 
@@ -110,11 +117,13 @@ public class FormsDatabase {
                 String title = cursor.getString(NUM_COLUMN_TITLE);
                 String questions = cursor.getString(NUM_COLUMN_QUESTIONS);
                 String staff = cursor.getString(NUM_COLUMN_STAFF);
+                int userAnswersCount = cursor.getInt(NUM_COLUMN_USER_ANSWERS_COUNT);
                 Form result = new Form(id);
                 result.setStatus(new FormStatus(status).formStatusEnum);
                 result.title = title;
                 result.unpackQuestions(questions, context);
                 result.unpackStaff(staff);
+                result.setUserAnswersCount(userAnswersCount);
                 arrayList.add(result);
             } while (cursor.moveToNext());
         }

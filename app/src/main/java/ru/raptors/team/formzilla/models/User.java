@@ -288,29 +288,30 @@ public class User implements Serializable {
 
     public void loadFiltersFromFirebase(Context context, Activity activity)
     {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(company).child("Filters");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(!activity.isFinishing()) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot dataFilterCategory : snapshot.getChildren()) {
-                            String category = dataFilterCategory.getKey();
-                            for(DataSnapshot dataFilter : dataFilterCategory.getChildren())
-                            {
-                                Filter filter = new Filter(dataFilter, category);
-                                if(!hasFilter(filter)) filters.add(filter);
+        if(company != null && !company.isEmpty()) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference(company).child("Filters");
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (!activity.isFinishing()) {
+                        if (snapshot.exists()) {
+                            for (DataSnapshot dataFilterCategory : snapshot.getChildren()) {
+                                String category = dataFilterCategory.getKey();
+                                for (DataSnapshot dataFilter : dataFilterCategory.getChildren()) {
+                                    Filter filter = new Filter(dataFilter, category);
+                                    if (!hasFilter(filter)) filters.add(filter);
+                                }
                             }
+                            save(context);
                         }
-                        save(context);
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
     }
 
     public void uploadFiltersOnFirebase(Context context)
@@ -326,6 +327,7 @@ public class User implements Serializable {
 
     public void save(Context context)
     {
+        saveInFirebase(context);
         UsersDatabase usersDatabase;
         usersDatabase = new UsersDatabase(context);
         if(usersDatabase.hasUser(ID)) usersDatabase.update(User.this);
@@ -338,7 +340,6 @@ public class User implements Serializable {
         {
             filter.save(context);
         }
-        saveInFirebase(context);
     }
 
     public void saveInFirebase(Context context)

@@ -14,6 +14,7 @@ import java.util.List;
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.activities.AnswerQuestionActivity;
 import ru.raptors.team.formzilla.models.Form;
+import ru.raptors.team.formzilla.models.Helper;
 
 public class AvailableFormAdapter extends RecyclerView.Adapter<AvailableFormAdapter.ViewHolder>{
 
@@ -37,7 +38,7 @@ public class AvailableFormAdapter extends RecyclerView.Adapter<AvailableFormAdap
     public void onBindViewHolder(AvailableFormAdapter.ViewHolder holder, int position) {
         Form form = availableForms.get(position);
         holder.title.setText(form.title);
-        holder.questionsCount.setText(Integer.toString(form.questions.size()));
+        holder.questionsCount.setText(Integer.toString(form.questions.size()) + " " + Helper.getWordQuestionInRightForm(form.questions.size()));
         holder.availableFormItem.setOnClickListener (new View.OnClickListener() {
             @Override
             public void onClick(View v) {
