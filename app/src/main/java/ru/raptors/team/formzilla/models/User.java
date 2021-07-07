@@ -359,10 +359,14 @@ public class User implements Serializable {
         databaseReference.setValue(firstName);
         databaseReference = accountReference.child("LastName");
         databaseReference.setValue(lastName);
-        databaseReference = accountReference.child("Company");
-        databaseReference.setValue(company);
-        databaseReference = accountReference.child("CompanyID");
-        databaseReference.setValue(companyID);
+        if(company != null && !company.isEmpty()) {
+            databaseReference = accountReference.child("Company");
+            databaseReference.setValue(company);
+        }
+        if(companyID != null && !companyID.isEmpty()) {
+            databaseReference = accountReference.child("CompanyID");
+            databaseReference.setValue(companyID);
+        }
         if(gender != null) {
             databaseReference = accountReference.child("Gender");
             databaseReference.setValue(new Gender(gender).getGender());
