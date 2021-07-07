@@ -24,6 +24,7 @@ public class CreatingFormActivity extends AppCompatActivity {
     private AutoCompleteTextView autoCompleteTextView;
     private Form form;
     private ArrayList<Filter> filters;
+    private final int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,19 @@ public class CreatingFormActivity extends AppCompatActivity {
         findViewById(R.id.add_filter).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent toChoosingFiltersActivity = new Intent(CreatingFormActivity.this,
+                        ChoosingFilersActivity.class);
+                startActivityForResult(toChoosingFiltersActivity, REQUEST_CODE);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+
+        }
     }
 
     private void getFormFromPreviousActivity() {
