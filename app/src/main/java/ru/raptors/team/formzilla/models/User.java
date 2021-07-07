@@ -416,12 +416,27 @@ public class User implements Serializable {
         return result;
     }
 
+    public Filter findFilterByFilterAndCategory(String filter, String category)
+    {
+        Filter result = null;
+        for(Filter userFilter : filters)
+        {
+            if(userFilter.category.equals(category)
+                    && userFilter.filter.equals(filter))
+            {
+                result = userFilter;
+                break;
+            }
+        }
+        return result;
+    }
+
 
     public void addFilter(Filter filter)
     {
         if(!hasFilter(filter)) filters.add(filter);
         else {
-            Filter existFilter = findFilterByID(filter.ID);
+            Filter existFilter = findFilterByFilterAndCategory(filter.filter, filter.category);
             for(User staffUser : filter.staff)
             {
                 if(!existFilter.hasUserInStaff(staffUser))

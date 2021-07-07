@@ -196,7 +196,7 @@ public class CreateQuestionActivity extends AppCompatActivity {
         {
             question.addOnAnsweredListenerCreateFilter(filterCategoryText.getText().toString(), User.getNowUser(getApplicationContext()));
         }
-        else result = false;
+        else if(createFilter) result = false;
         if (result) form.questions.add(question);
         else {
             errorText.setVisibility(View.VISIBLE);
@@ -218,7 +218,6 @@ public class CreateQuestionActivity extends AppCompatActivity {
         if(questionAddResult) {
             User nowUser = User.getNowUser(this);
             form.setStatus(FormStatusEnum.Created);
-            form.staff = nowUser.getStaff();
             nowUser.addForm(form);
             nowUser.uploadFormToFirebase(form);
             form.sendToStaff();

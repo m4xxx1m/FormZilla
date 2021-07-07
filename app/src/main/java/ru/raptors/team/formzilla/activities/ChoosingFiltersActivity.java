@@ -10,13 +10,13 @@ import android.widget.ExpandableListView;
 
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.adapters.FiltersExpandableListAdapter;
+import ru.raptors.team.formzilla.models.Filter;
 import ru.raptors.team.formzilla.models.User;
 
 public class ChoosingFiltersActivity extends AppCompatActivity {
 
     private ExpandableListView filtersView;
     private FiltersExpandableListAdapter adapter;
-    public static final String INTENT_NAME = "filter";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,9 @@ public class ChoosingFiltersActivity extends AppCompatActivity {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Intent data = new Intent();
-                data.putExtra("", 0/*TODO: здесь передаём фильтр в предыдущую активность*/);
+                String category = adapter.getGroup(groupPosition).toString();
+                String filter = adapter.getChild(groupPosition, childPosition).toString();
+                data.putExtra(CreatingFormActivity.CHOSEN_FILTER, nowUser.findFilterByFilterAndCategory(filter, category));
                 setResult(RESULT_OK, data);
                 finish();
                 return false;

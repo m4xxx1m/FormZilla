@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.google.firebase.database.DataSnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 import ru.raptors.team.formzilla.databases.FiltersDatabase;
 import ru.raptors.team.formzilla.interfaces.Action;
 
-public class Filter {
+public class Filter implements Serializable {
     public String ID;
     public String filter;
     public String category;
