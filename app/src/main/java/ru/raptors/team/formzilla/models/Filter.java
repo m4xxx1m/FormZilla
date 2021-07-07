@@ -1,8 +1,13 @@
 package ru.raptors.team.formzilla.models;
 
+import android.app.Activity;
 import android.content.Context;
 
+import com.google.firebase.database.DataSnapshot;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import ru.raptors.team.formzilla.databases.FiltersDatabase;
 import ru.raptors.team.formzilla.interfaces.Action;
@@ -11,10 +16,11 @@ public class Filter {
     public String ID;
     public String filter;
     public String category;
-    public ArrayList<User> staff;
+    public List<User> staff;
 
     public Filter()
     {
+        ID = Helper.generateID();
         staff = new ArrayList<User>();
     }
 
@@ -36,11 +42,18 @@ public class Filter {
         this.staff = staff;
     }
 
-    public void getStaffAndDoAction(Context context, Action action)
-    {
-        // Todo: метод получает всех пользователей, которые подходят под этот фильтр, с Firebase
-        // (!он не должен перебирать пользователей)
-        // (в firebase создаётся string название фильтра и все пользователи, которые под него подходят)
+    public Filter(DataSnapshot dataFilter, String category) {
+        this();
+        this.ID = dataFilter.getKey();
+        if(dataFilter.hasChild("Filter")) this.filter = dataFilter.child("Filter").getValue(String.class);
+        this.category = category;
+        if(dataFilter.hasChild("Staff")) {
+            String staffPack = dataFilter.child("Staff").getValue(String.class);
+            for (String employeeID : staffPack.split(" ")) {
+                staff.add(new User(employeeID));
+            }
+        }
+
     }
 
     public boolean hasUserInStaff(User user)
@@ -61,7 +74,8 @@ public class Filter {
     {
         FiltersDatabase filtersDatabase;
         filtersDatabase = new FiltersDatabase(context);
-        filtersDatabase.update(this);
+        if(filtersDatabase.hasFilter(ID)) filtersDatabase.update(this);
+        else filtersDatabase.insert(this);
     }
 
     public void loadFromPhone(Context context)

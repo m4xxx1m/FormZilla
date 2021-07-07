@@ -1,5 +1,7 @@
 package ru.raptors.team.formzilla.models;
 
+import android.content.Context;
+
 import ru.raptors.team.formzilla.enums.OnAnsweredListenerEnum;
 import ru.raptors.team.formzilla.interfaces.OnAnsweredListener;
 
@@ -9,11 +11,14 @@ public class CreateFilterOnAnsweredListener implements OnAnsweredListener {
     public User user;
 
     @Override
-    public void onAnswered(String answer, String userID) {
+    public void onAnswered(String answer, String userID, Context context) {
         Filter filter;
         filter = new Filter(answer, category);
         filter.staff.add(new User(userID));
+        User user = User.getNowUser(context);
         user.addFilter(filter);
+        user.uploadFiltersOnFirebase(context);
+        user.save(context);
     }
 
     public void setCreatingFilterCategory(String category)
@@ -28,6 +33,6 @@ public class CreateFilterOnAnsweredListener implements OnAnsweredListener {
 
     @Override
     public String toString() {
-        return OnAnsweredListenerEnum.CreateFilter + " " + category + " " + user.getID() + " ";
+        return "0" + "%%regex" + category + "%%regex" + user.getID() + "%%regex";
     }
 }

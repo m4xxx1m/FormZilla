@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FormZilla">
-        <activity android:name=".activities.ChoosingFilersActivity"></activity>
+        <activity android:name=".activities.ChoosingFiltersActivity"></activity>
         <activity android:name=".activities.CreatingFormActivity" />
         <activity android:name=".activities.AnswerQuestionActivity" />
         <activity android:name=".activities.NewEmployeeActivity" />

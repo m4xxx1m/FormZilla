@@ -2,9 +2,14 @@ package ru.raptors.team.formzilla.models;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,6 +58,10 @@ public class Form implements Serializable {
         ID = dataSnapshot.getKey();
         if(dataSnapshot.hasChild("Title")) title = dataSnapshot.child("Title").getValue(String.class);
         if(dataSnapshot.hasChild("Status")) setStatus(new FormStatus(dataSnapshot.child("Status").getValue(String.class)).getFormStatus());
+        if(status == FormStatusEnum.Created)
+        {
+            if(dataSnapshot.hasChild("Staff")) unpackStaff(dataSnapshot.child("Staff").getValue(String.class));
+        }
         if(dataSnapshot.hasChild("Questions"))
         {
             DataSnapshot dataQuestions = dataSnapshot.child("Questions");
@@ -94,7 +103,7 @@ public class Form implements Serializable {
             databaseReference.setValue(status.toString());
             for (int i = 0; i < questions.size(); i++) {
                 Question question = questions.get(i);
-                DatabaseReference questionReference = formReference.child("Questions").child(Integer.toString(i));
+                DatabaseReference questionReference = formReference.child("Questions").child(question.getID());
                 databaseReference = questionReference.child("Question");
                 databaseReference.setValue(question.question);
                 databaseReference = questionReference.child("Type");
@@ -111,11 +120,60 @@ public class Form implements Serializable {
         }
     }
 
-    //  Todo: здесь должны перебираться все сотрудники в Firebase, в том чиле и их наследники.
+    //  Todo: здесь должны перебираться все сотрудники в Firebase.
     // потом метод получает сотрудников, у которых есть форма с такой же ID и статусом passed
-    public void getStaffAnswersAndDoAction(Context context, Action action)
-    {
+    public void getStaffAnswers(Context context) {
+        for (User employee : staff) {
+            DatabaseReference employeeReference = FirebaseDatabase.getInstance().getReference("Accounts").child(employee.getID());
+            DatabaseReference formReference = employeeReference.child("Forms").child(ID);
+            formReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataForm) {
+                    if (dataForm.exists()) {
+                        if (dataForm.hasChild("Status")) {
+                            FormStatusEnum status = new FormStatus(dataForm.child("Status").getValue(String.class)).formStatusEnum;
+                            if (status == FormStatusEnum.Passed) {
+                                Form passedForm = new Form(dataForm);
+                                for (Question passedQuestion : passedForm.questions) {
+                                    for (Question thisFormQuestion : Form.this.questions) {
+                                        if (passedQuestion.ID.equals(thisFormQuestion.getID())) {
+                                            switch (passedQuestion.questionType) {
+                                                case TextAnswer: {
+                                                    TextQuestion textQuestion = (TextQuestion) passedQuestion;
+                                                    Form.this.userAnswers.add(new UserAnswer(textQuestion.answer, employee));
+                                                    thisFormQuestion.callListeners(textQuestion.answer, employee.getID(), context);
+                                                    break;
+                                                }
+                                                case SingleAnswer: {
+                                                    SingleAnswerQuestion singleAnswerQuestion = (SingleAnswerQuestion) passedQuestion;
+                                                    Form.this.userAnswers.add(new UserAnswer(singleAnswerQuestion.selectedAnswer, employee));
+                                                    thisFormQuestion.callListeners(singleAnswerQuestion.selectedAnswer, employee.getID(), context);
+                                                    break;
+                                                }
+                                                case MultiAnswer: {
+                                                    MultiAnswersQuestion multiAnswersQuestion = (MultiAnswersQuestion) passedQuestion;
+                                                    for (String employeeAnswer : multiAnswersQuestion.selectedAnswers) {
+                                                        Form.this.userAnswers.add(new UserAnswer(employeeAnswer, employee));
+                                                        thisFormQuestion.callListeners(employeeAnswer, employee.getID(), context);
+                                                    }
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        Form.this.save(context);
+                    }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     public void save(Context context)

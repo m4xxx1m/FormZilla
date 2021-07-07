@@ -9,8 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import ru.raptors.team.formzilla.models.Form;
-import ru.raptors.team.formzilla.models.FormStatus;
 import ru.raptors.team.formzilla.models.Gender;
 import ru.raptors.team.formzilla.models.User;
 
@@ -80,7 +78,7 @@ public class UsersDatabase {
         if(user.getPassword() != null && !user.getPassword().isEmpty()) contentValues.put(COLUMN_PASSWORD, user.getPassword());
         if(user.getForms() != null && !user.getForms().isEmpty()) contentValues.put(COLUMN_FORMS, user.packForms());
         if(user.getStaff() != null && !user.getStaff().isEmpty()) contentValues.put(COLUMN_STAFF, user.packStaff());
-        if(user.getFilters() != null && !user.getFilters().isEmpty())contentValues.put(COLUMN_FILTERS, user.packFilters());
+        if(user.getFilters() != null && !user.getFilters().isEmpty())contentValues.put(COLUMN_FILTERS, user.packFilters(context));
 
         return database.insert(TABLE_NAME, null, contentValues);
     }
@@ -96,7 +94,7 @@ public class UsersDatabase {
         if(user.getPassword() != null && !user.getPassword().isEmpty()) contentValues.put(COLUMN_PASSWORD, user.getPassword());
         if(user.getForms() != null && !user.getForms().isEmpty()) contentValues.put(COLUMN_FORMS, user.packForms());
         if(user.getStaff() != null && !user.getStaff().isEmpty()) contentValues.put(COLUMN_STAFF, user.packStaff());
-        if(user.getFilters() != null && !user.getFilters().isEmpty())contentValues.put(COLUMN_FILTERS, user.packFilters());
+        if(user.getFilters() != null && !user.getFilters().isEmpty()) contentValues.put(COLUMN_FILTERS, user.packFilters(context));
 
         return database.update(TABLE_NAME, contentValues, COLUMN_ID + " = ?",new String[] { String.valueOf(user.getID())});
     }

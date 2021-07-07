@@ -9,12 +9,13 @@ import android.view.View;
 import android.widget.ExpandableListView;
 
 import ru.raptors.team.formzilla.R;
-import ru.raptors.team.formzilla.adapters.FiltersAdapter;
+import ru.raptors.team.formzilla.adapters.FiltersExpandableListAdapter;
+import ru.raptors.team.formzilla.models.User;
 
-public class ChoosingFilersActivity extends AppCompatActivity {
+public class ChoosingFiltersActivity extends AppCompatActivity {
 
     private ExpandableListView filtersView;
-    private FiltersAdapter adapter;
+    private FiltersExpandableListAdapter adapter;
     public static final String INTENT_NAME = "filter";
 
     @Override
@@ -30,7 +31,8 @@ public class ChoosingFilersActivity extends AppCompatActivity {
             }
         });
         filtersView = findViewById(R.id.expListView);
-        adapter = new FiltersAdapter(this);
+        User nowUser = User.getNowUser(this);
+        adapter = new FiltersExpandableListAdapter(this, nowUser.getAllCategories(), nowUser.getFiltersAsHashMap());
         filtersView.setAdapter(adapter);
         filtersView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override

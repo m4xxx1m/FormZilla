@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -33,6 +34,8 @@ public class CreateQuestionActivity extends AppCompatActivity {
     private Form form;
     private MaterialToolbar toolbar;
     private EditText questionNameText;
+    private EditText filterCategoryText;
+    private TextView errorText;
     private SwitchMaterial freeAnswerSwitch;
     private SwitchMaterial multipleAnswerSwitch;
     private SwitchMaterial filterCreationListenerSwitch;
@@ -40,6 +43,8 @@ public class CreateQuestionActivity extends AppCompatActivity {
     private LinearLayout addAnswerLayout;
     private LinearLayout answersPlaceHolder;
     private LinearLayout placeHolder;
+
+    private boolean createFilter = false;
 
     private Question question;
 
@@ -81,6 +86,13 @@ public class CreateQuestionActivity extends AppCompatActivity {
         filterCreationListenerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    createFilter = true;
+                    filterCategoryText.setVisibility(View.VISIBLE);
+                } else {
+                    createFilter = false;
+                    filterCategoryText.setVisibility(View.INVISIBLE);
+                }
             }
         });
         addAnswer(null);
@@ -107,6 +119,8 @@ public class CreateQuestionActivity extends AppCompatActivity {
     {
         toolbar = findViewById(R.id.toolbar);
         questionNameText = findViewById(R.id.enter_question_name);
+        filterCategoryText = findViewById(R.id.filter_category);
+        errorText = findViewById(R.id.error);
         freeAnswerSwitch = findViewById(R.id.free_answer);
         multipleAnswerSwitch = findViewById(R.id.multiple_answer);
         filterCreationListenerSwitch = findViewById(R.id.create_filter_by_answer);
@@ -178,7 +192,15 @@ public class CreateQuestionActivity extends AppCompatActivity {
             // вывод предупреждения
             result = false;
         }
-        if(result) form.questions.add(question);
+        if(!filterCategoryText.getText().toString().trim().isEmpty() && result)
+        {
+            question.addOnAnsweredListenerCreateFilter(filterCategoryText.getText().toString(), User.getNowUser(getApplicationContext()));
+        }
+        else result = false;
+        if (result) form.questions.add(question);
+        else {
+            errorText.setVisibility(View.VISIBLE);
+        }
         return result;
     }
 
@@ -196,11 +218,11 @@ public class CreateQuestionActivity extends AppCompatActivity {
         if(questionAddResult) {
             User nowUser = User.getNowUser(this);
             form.setStatus(FormStatusEnum.Created);
-            nowUser.addForm(form);
-            nowUser.save(getApplicationContext());
-            nowUser.uploadFormToFirebase(form);
             form.staff = nowUser.getStaff();
+            nowUser.addForm(form);
+            nowUser.uploadFormToFirebase(form);
             form.sendToStaff();
+            nowUser.save(this);
             Intent createFormIntent = new Intent(CreateQuestionActivity.this, MainActivity.class);
             startActivity(createFormIntent);
         }

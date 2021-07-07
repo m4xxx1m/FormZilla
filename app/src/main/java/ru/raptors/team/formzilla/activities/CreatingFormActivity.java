@@ -47,7 +47,7 @@ public class CreatingFormActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent toChoosingFiltersActivity = new Intent(CreatingFormActivity.this,
-                        ChoosingFilersActivity.class);
+                        ChoosingFiltersActivity.class);
                 startActivityForResult(toChoosingFiltersActivity, REQUEST_CODE);
             }
         });

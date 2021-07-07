@@ -55,7 +55,7 @@ public class QuestionsDatabase implements Serializable {
         contentValues.put(COLUMN_ID, question.getID());
         contentValues.put(COLUMN_QUESTION, question.question);
         contentValues.put(COLUMN_QUESTION_TYPE, new QuestionType(question.questionType).toString());
-        contentValues.put(COLUMN_ON_ANSWERED_LISTENERS, question.packOnAnsweredListeners());
+        if(!question.onAnsweredListeners.isEmpty()) contentValues.put(COLUMN_ON_ANSWERED_LISTENERS, question.packOnAnsweredListeners());
         if(question.questionType != QuestionTypeEnum.TextAnswer)
         {
             MultipleQuestion multipleQuestion = (MultipleQuestion) question;
@@ -69,7 +69,7 @@ public class QuestionsDatabase implements Serializable {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_QUESTION, question.question);
         contentValues.put(COLUMN_QUESTION_TYPE, new QuestionType(question.questionType).toString());
-        contentValues.put(COLUMN_ON_ANSWERED_LISTENERS, question.packOnAnsweredListeners());
+        if(!question.onAnsweredListeners.isEmpty()) contentValues.put(COLUMN_ON_ANSWERED_LISTENERS, question.packOnAnsweredListeners());
         if(question.questionType != QuestionTypeEnum.TextAnswer)
         {
             MultipleQuestion multipleQuestion = (MultipleQuestion) question;

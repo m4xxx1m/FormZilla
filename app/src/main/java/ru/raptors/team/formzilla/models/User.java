@@ -14,6 +14,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import ru.raptors.team.formzilla.databases.NowUserDatabase;
 import ru.raptors.team.formzilla.databases.UsersDatabase;
@@ -234,15 +236,21 @@ public class User implements Serializable {
         databaseReference = formReference.child("Status");
         FormStatus status = new FormStatus(form.getStatus());
         databaseReference.setValue(status.toString());
+        if(!form.staff.isEmpty()) {
+            databaseReference = formReference.child("Staff");
+            databaseReference.setValue(form.packStaff());
+        }
         for(int i = 0; i < form.questions.size(); i++)
         {
             Question question = form.questions.get(i);
-            DatabaseReference questionReference = formReference.child("Questions").child(Integer.toString(i));
+            DatabaseReference questionReference = formReference.child("Questions").child(question.getID());
             databaseReference = questionReference.child("Question");
             databaseReference.setValue(question.question);
             databaseReference = questionReference.child("Type");
             QuestionType questionType = new QuestionType(question.questionType);
             databaseReference.setValue(questionType.toString());
+            databaseReference = questionReference.child("OnAnsweredListeners");
+            databaseReference.setValue(question.packOnAnsweredListeners());
             if(form.getStatus() == FormStatusEnum.Passed) {
                 switch (question.questionType) {
                     case SingleAnswer: {
@@ -278,14 +286,42 @@ public class User implements Serializable {
         }
     }
 
-    public void getFiltersFromFirebaseAndDoAction(Context context, Action action)
+    public void loadFiltersFromFirebase(Context context, Activity activity)
     {
-        // Todo: получает все доступные фильтры с Firebase
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(company).child("Filters");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!activity.isFinishing()) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot dataFilterCategory : snapshot.getChildren()) {
+                            String category = dataFilterCategory.getKey();
+                            for(DataSnapshot dataFilter : dataFilterCategory.getChildren())
+                            {
+                                Filter filter = new Filter(dataFilter, category);
+                                if(!hasFilter(filter)) filters.add(filter);
+                            }
+                        }
+                        save(context);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     public void uploadFiltersOnFirebase(Context context)
     {
-        // Todo: загружает все фильтры на Firebase
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference(company).child("Filters");
+        for(Filter filter : getFilters())
+        {
+            DatabaseReference filterReference = reference.child(filter.category).child(filter.ID);
+            filterReference.child("Filter").setValue(filter.filter);
+            filterReference.child("Staff").setValue(filter.packStaff());
+        }
     }
 
     public void save(Context context)
@@ -297,6 +333,10 @@ public class User implements Serializable {
         for(Form form : forms)
         {
             form.save(context);
+        }
+        for(Filter filter : filters)
+        {
+            filter.save(context);
         }
         saveInFirebase(context);
     }
@@ -353,8 +393,7 @@ public class User implements Serializable {
         boolean result = false;
         for(Filter userFilter : filters)
         {
-            if(userFilter.ID.equals(filter.ID)
-                    && userFilter.category.equals(filter.category)
+            if(userFilter.category.equals(filter.category)
                     && userFilter.filter.equals(filter.filter))
             {
                 result = true;
@@ -454,19 +493,20 @@ public class User implements Serializable {
         }
     }
 
-    public String packFilters()
+    public String packFilters(Context context)
     {
         String result = "";
         for(Filter filter : filters)
         {
-            result += filter.ID + " ";
+            filter.save(context);
+            result += filter.ID + "%reg%ex%";
         }
         return result;
     }
 
     public void unpackFilters(String pack, Context context)
     {
-        String[] unpackedFiltersIDs = pack.split(" ");
+        String[] unpackedFiltersIDs = pack.split("%reg%ex%");
         for(String unpackedFilterID : unpackedFiltersIDs)
         {
             Filter filter = new Filter(unpackedFilterID);
@@ -508,6 +548,39 @@ public class User implements Serializable {
         for(Form form : forms)
         {
             result = form.toString() + " ";
+        }
+        return result;
+    }
+
+    public ArrayList<Filter> getFilters() {
+        return filters;
+    }
+
+    public HashMap<String, List<String>> getFiltersAsHashMap() {
+        HashMap<String, List<String>> result = new HashMap<String, List<String>>();
+        for(String category : getAllCategories())
+        {
+            result.put(category, getAllFiltersInCategory(category));
+        }
+        return result;
+    }
+
+    public ArrayList<String> getAllCategories()
+    {
+        ArrayList<String> result = new ArrayList<String>();
+        for(Filter filter : filters)
+        {
+            if(!result.contains(filter.category)) result.add(filter.category);
+        }
+        return result;
+    }
+
+    private ArrayList<String> getAllFiltersInCategory(String category)
+    {
+        ArrayList<String> result = new ArrayList<String>();
+        for(Filter filter : filters)
+        {
+            if(filter.category.equals(category)) result.add(filter.filter);
         }
         return result;
     }
@@ -583,9 +656,5 @@ public class User implements Serializable {
 
     public ArrayList<User> getStaff() {
         return staff;
-    }
-
-    public ArrayList<Filter> getFilters() {
-        return filters;
     }
 }

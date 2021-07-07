@@ -11,7 +11,7 @@ import ru.raptors.team.formzilla.enums.QuestionTypeEnum;
 import ru.raptors.team.formzilla.interfaces.OnAnsweredListener;
 
 public class Question implements Serializable {
-    private String ID;
+    protected String ID;
     public String question;
     public QuestionTypeEnum questionType;
     public ArrayList<OnAnsweredListener> onAnsweredListeners;
@@ -34,11 +34,11 @@ public class Question implements Serializable {
         onAnsweredListeners.add(createFilterOnAnsweredListener);
     }
 
-    public void callListeners(String answer, String userID)
+    public void callListeners(String answer, String userID, Context context)
     {
         for(OnAnsweredListener onAnsweredListener : onAnsweredListeners)
         {
-            onAnsweredListener.onAnswered(answer, userID);
+            onAnsweredListener.onAnswered(answer, userID, context);
         }
     }
 
@@ -69,13 +69,14 @@ public class Question implements Serializable {
 
     public void unpackOnAnsweredListeners(String pack)
     {
-        String[] unpackedListeners = pack.split(" ");
+        if(pack == null || pack.isEmpty()) return;
+        String[] unpackedListeners = pack.split("%%regex");
         for(int i = 0 ; i < unpackedListeners.length; i++)
         {
             int onAnsweredListenerInt;
             try{
                 onAnsweredListenerInt = Integer.parseInt(unpackedListeners[i]);
-                if(OnAnsweredListenerEnum.fromInteger(onAnsweredListenerInt).equals(OnAnsweredListenerEnum.CreateFilter))
+                if(onAnsweredListenerInt == 0)
                 {
                     i++;
                     String category = unpackedListeners[i];

@@ -56,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         User nowUser = nowUserDatabase.select();
         nowUser.loadUserFromFirebase(getApplicationContext(), MainActivity.this);
         nowUser.loadStaffFromFirebase(this);
+        nowUser.loadFiltersFromFirebase(this, MainActivity.this);
+        for(Form form : nowUser.getCreatedForms())
+        {
+            form.getStaffAnswers(getApplicationContext());
+        }
 
         openAvailableFormsFragment();
 

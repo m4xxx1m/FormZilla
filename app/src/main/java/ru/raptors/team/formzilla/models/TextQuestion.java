@@ -20,8 +20,10 @@ public class TextQuestion extends Question {
     }
 
     public TextQuestion(DataSnapshot dataSnapshot) {
-        super();
+        super(dataSnapshot.getKey());
         questionType = QuestionTypeEnum.TextAnswer;
+        ID = dataSnapshot.getKey();
+        if(dataSnapshot.hasChild("OnAnsweredListeners")) unpackOnAnsweredListeners(dataSnapshot.child("OnAnsweredListeners").getValue(String.class));
         if(dataSnapshot.hasChild("Question")) question = dataSnapshot.child("Question").getValue(String.class);
         if(dataSnapshot.hasChild("Type")) questionType = new QuestionType(dataSnapshot.child("Type").getValue(String.class)).questionTypeEnum;
         if(dataSnapshot.hasChild("UserAnswers")) {
