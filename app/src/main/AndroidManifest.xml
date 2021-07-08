@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FormZilla">
-        <activity android:name=".activities.ChoosingFiltersActivity"></activity>
+        <activity android:name=".activities.ChoosingFiltersActivity" />
         <activity android:name=".activities.CreatingFormActivity" />
         <activity android:name=".activities.AnswerQuestionActivity" />
         <activity android:name=".activities.NewEmployeeActivity" />
@@ -18,7 +18,8 @@
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.SignUpActivity" />
-        <activity android:name=".activities.SplashActivity">
+        <activity android:name=".activities.SplashActivity"
+            android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
