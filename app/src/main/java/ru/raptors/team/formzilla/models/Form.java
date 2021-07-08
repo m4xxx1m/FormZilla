@@ -1,5 +1,6 @@
 package ru.raptors.team.formzilla.models;
 
+import android.app.Activity;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
@@ -125,7 +126,7 @@ public class Form implements Serializable {
 
     //  Todo: здесь должны перебираться все сотрудники в Firebase.
     // потом метод получает сотрудников, у которых есть форма с такой же ID и статусом passed
-    public void getStaffAnswers(Context context) {
+    public void getStaffAnswersAndDoAction(Context context, Action action) {
         for (User employee : staff) {
             DatabaseReference employeeReference = FirebaseDatabase.getInstance().getReference("Accounts").child(employee.getID());
             DatabaseReference formReference = employeeReference.child("Forms").child(ID);
@@ -143,20 +144,20 @@ public class Form implements Serializable {
                                             switch (passedQuestion.questionType) {
                                                 case TextAnswer: {
                                                     TextQuestion textQuestion = (TextQuestion) passedQuestion;
-                                                    Form.this.userAnswers.add(new UserAnswer(textQuestion.answer, employee));
+                                                    Form.this.userAnswers.add(new UserAnswer(textQuestion.getID(), textQuestion.answer, employee));
                                                     thisFormQuestion.callListeners(textQuestion.answer, employee.getID(), context);
                                                     break;
                                                 }
                                                 case SingleAnswer: {
                                                     SingleAnswerQuestion singleAnswerQuestion = (SingleAnswerQuestion) passedQuestion;
-                                                    Form.this.userAnswers.add(new UserAnswer(singleAnswerQuestion.selectedAnswer, employee));
+                                                    Form.this.userAnswers.add(new UserAnswer(singleAnswerQuestion.getID(), singleAnswerQuestion.selectedAnswer, employee));
                                                     thisFormQuestion.callListeners(singleAnswerQuestion.selectedAnswer, employee.getID(), context);
                                                     break;
                                                 }
                                                 case MultiAnswer: {
                                                     MultiAnswersQuestion multiAnswersQuestion = (MultiAnswersQuestion) passedQuestion;
                                                     for (String employeeAnswer : multiAnswersQuestion.selectedAnswers) {
-                                                        Form.this.userAnswers.add(new UserAnswer(employeeAnswer, employee));
+                                                        Form.this.userAnswers.add(new UserAnswer(multiAnswersQuestion.getID(), employeeAnswer, employee));
                                                         thisFormQuestion.callListeners(employeeAnswer, employee.getID(), context);
                                                     }
                                                     break;
@@ -171,6 +172,7 @@ public class Form implements Serializable {
                         }
                         Form.this.userAnswersCount = Form.this.userAnswers.size();
                         Form.this.save(context);
+                        if(action != null) action.run();
                     }
                 }
 
@@ -272,6 +274,14 @@ public class Form implements Serializable {
 
     public void setUserAnswersCount(int userAnswersCount) {
         this.userAnswersCount = userAnswersCount;
+    }
+
+    public ArrayList<UserAnswer> getUserAnswers() {
+        return userAnswers;
+    }
+
+    public void setUserAnswers(ArrayList<UserAnswer> userAnswers) {
+        this.userAnswers = userAnswers;
     }
 
     public FormStatusEnum getStatus() {

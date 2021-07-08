@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.activities.EnterFormNameActivity;
+import ru.raptors.team.formzilla.activities.MainActivity;
 import ru.raptors.team.formzilla.adapters.CreatedFormsAdapter;
 import ru.raptors.team.formzilla.models.Form;
 import ru.raptors.team.formzilla.models.User;
@@ -68,7 +69,7 @@ public class CreatedFormsFragment extends Fragment {
         if(nowUser != null) {
             ArrayList<Form> createdForms = nowUser.getCreatedForms();
             Log.i("UserForms", nowUser.formsToString());
-            CreatedFormsAdapter createdFormsAdapter = new CreatedFormsAdapter(getContext(), createdForms);
+            CreatedFormsAdapter createdFormsAdapter = new CreatedFormsAdapter(getContext(), createdForms, (MainActivity) getActivity());
             RecyclerView createdFormsRecyclerView = view.findViewById(R.id.created_forms_recycler_view);
             createdFormsRecyclerView.setAdapter(createdFormsAdapter);
             createdFormsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

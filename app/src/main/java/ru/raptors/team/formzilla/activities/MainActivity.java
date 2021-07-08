@@ -24,8 +24,10 @@ import ru.raptors.team.formzilla.R;
 import ru.raptors.team.formzilla.databases.NowUserDatabase;
 import ru.raptors.team.formzilla.fragments.AvailableFormsFragment;
 import ru.raptors.team.formzilla.fragments.CreatedFormsFragment;
+import ru.raptors.team.formzilla.fragments.FormAnswersFragment;
 import ru.raptors.team.formzilla.fragments.PassedFormsFragment;
 import ru.raptors.team.formzilla.fragments.StaffFragment;
+import ru.raptors.team.formzilla.fragments.TextAnswerQuestionFragment;
 import ru.raptors.team.formzilla.models.Form;
 import ru.raptors.team.formzilla.models.User;
 
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         nowUser.loadStaffFromFirebaseAndDoAction(this, null);
         nowUser.loadFiltersFromFirebase(this, MainActivity.this, null);
         for (Form form : nowUser.getCreatedForms()) {
-            form.getStaffAnswers(getApplicationContext());
+            form.getStaffAnswersAndDoAction(getApplicationContext(), null);
         }
 
         openAvailableFormsFragment();
@@ -167,6 +169,18 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.place_holder, staffFragment)
+                .commit();
+    }
+
+    public void openFormAnswersFragment(Form form)
+    {
+        toolbar.setTitle(form.title);
+        placeHolder.removeAllViews();
+        FormAnswersFragment formAnswersFragment = FormAnswersFragment.newInstance(form);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.place_holder, formAnswersFragment)
                 .commit();
     }
 

@@ -14,15 +14,16 @@ public class TextQuestion extends Question {
         questionType = QuestionTypeEnum.TextAnswer;
     }
 
-    public TextQuestion(String answer) {
-        this();
-        this.answer = answer;
+    public TextQuestion(String ID) {
+        super();
+        this.ID = ID;
+        questionType = QuestionTypeEnum.TextAnswer;
     }
 
     public TextQuestion(DataSnapshot dataSnapshot) {
         super(dataSnapshot.getKey());
         questionType = QuestionTypeEnum.TextAnswer;
-        ID = dataSnapshot.getKey();
+        this.ID = dataSnapshot.getKey();
         if(dataSnapshot.hasChild("OnAnsweredListeners")) unpackOnAnsweredListeners(dataSnapshot.child("OnAnsweredListeners").getValue(String.class));
         if(dataSnapshot.hasChild("Question")) question = dataSnapshot.child("Question").getValue(String.class);
         if(dataSnapshot.hasChild("Type")) questionType = new QuestionType(dataSnapshot.child("Type").getValue(String.class)).questionTypeEnum;
