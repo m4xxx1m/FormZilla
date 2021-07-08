@@ -84,7 +84,7 @@ public class User implements Serializable {
                             employee.lastName = dataEmployee.child("LastName").getValue(String.class);
                         employee.save(context);
                     }
-                    action.run();
+                    if (action != null) action.run();
                 }
 
                 @Override
@@ -335,7 +335,7 @@ public class User implements Serializable {
                             }
                             save(context);
                         }
-                        action.run();
+                        if (action != null) action.run();
                     }
                 }
 
