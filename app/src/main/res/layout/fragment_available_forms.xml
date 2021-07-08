@@ -11,10 +11,12 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginRight="15dp"
+
         android:clipToPadding="false"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+<!--    android:layout_marginLeft="15dp"-->
+<!--    android:layout_marginTop="15dp"-->
+<!--    android:layout_marginRight="15dp"-->
 </FrameLayout>
