@@ -1,6 +1,7 @@
 package ru.raptors.team.formzilla.activities;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -54,13 +55,16 @@ public class MainActivity extends AppCompatActivity {
 
         NowUserDatabase nowUserDatabase = new NowUserDatabase(this);
         User nowUser = nowUserDatabase.select();
-        nowUser.loadUserFromFirebase(getApplicationContext(), MainActivity.this);
-        nowUser.loadStaffFromFirebase(this);
-        nowUser.loadFiltersFromFirebase(this, MainActivity.this);
-        for(Form form : nowUser.getCreatedForms())
+        nowUser.loadUserFromFirebaseAndDoAction(getApplicationContext(), MainActivity.this, () ->
         {
-            form.getStaffAnswers(getApplicationContext());
-        }
+            nowUser.loadStaffFromFirebaseAndDoAction(this, () -> {
+                nowUser.loadFiltersFromFirebase(this, MainActivity.this, () -> {
+                    for (Form form : nowUser.getCreatedForms()) {
+                        form.getStaffAnswers(getApplicationContext());
+                    }
+                });
+            });
+                    });
 
         openAvailableFormsFragment();
 
@@ -101,7 +105,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getApplicationContext().deleteDatabase("users.db");
                 getApplicationContext().deleteDatabase("nowUser.db");
+                getApplicationContext().deleteDatabase("forms.db");
+                getApplicationContext().deleteDatabase("questions.db");
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();

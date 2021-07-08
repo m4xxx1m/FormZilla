@@ -48,11 +48,14 @@ public class NewEmployeeActivity extends AppCompatActivity {
             User employee = nowUser.generateUser(firstName.getText().toString(), lastName.getText().toString());
             employee.setCompany(nowUser.getCompany());
             employee.setCompanyID(nowUser.getCompanyID());
-            employee.save(getApplicationContext());
             nowUser.addEmployeeToStaff(employee);
+            employee.save(getApplicationContext());
+            employee.saveInFirebase(getApplicationContext());
             nowUser.save(getApplicationContext());
+            nowUser.saveInFirebase(getApplicationContext());
             Intent goToMainActivityIntent = new Intent(NewEmployeeActivity.this, MainActivity.class);
             startActivity(goToMainActivityIntent);
+            finish();
         }
     }
 }

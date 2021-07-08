@@ -2,8 +2,6 @@ package ru.raptors.team.formzilla.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     User user = new User();
-                    user.loadUserFromFirebaseAndDoAction(loginEditText.getText().toString(), passwordEditText.getText().toString(), new Action() {
+                    user.loadUserFromFirebaseByLoginAndPasswordAndDoAction(loginEditText.getText().toString(), passwordEditText.getText().toString(), new Action() {
                         @Override
                         public void run() {
                             user.save(context);

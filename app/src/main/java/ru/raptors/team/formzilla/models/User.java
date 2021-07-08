@@ -66,7 +66,7 @@ public class User implements Serializable {
         return result;
     }
 
-    public void loadStaffFromFirebase(Context context)
+    public void loadStaffFromFirebaseAndDoAction(Context context, Action action)
     {
         for(User employee : staff) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts").child(employee.ID);
@@ -84,6 +84,7 @@ public class User implements Serializable {
                             employee.lastName = dataEmployee.child("LastName").getValue(String.class);
                         employee.save(context);
                     }
+                    action.run();
                 }
 
                 @Override
@@ -123,8 +124,38 @@ public class User implements Serializable {
         });
     }
 
+    public void loadUserFromFirebaseAndDoAction(Context context, Activity activity, Action action)
+    {
+        User result = null;
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts").child(ID);
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!activity.isFinishing()) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot dataUser : snapshot.getChildren()) {
+                            if (dataUser.hasChild("Login")) login = dataUser.child("Login").getValue(String.class);
+                            if (dataUser.hasChild("Password")) password = dataUser.child("Password").getValue(String.class);
+                            if (dataUser.hasChild("FirstName")) firstName = dataUser.child("FirstName").getValue(String.class);
+                            if (dataUser.hasChild("LastName")) lastName = dataUser.child("LastName").getValue(String.class);
+                            if (dataUser.hasChild("Gender")) gender = new Gender(dataUser.child("Gender").getValue(String.class)).getGender();
+                            if (dataUser.hasChild("Company")) company = dataUser.child("Company").getValue(String.class);
+                            if (dataUser.hasChild("CompanyID")) companyID = dataUser.child("CompanyID").getValue(String.class);
+                            if (dataUser.hasChild("Staff")) unpackStaff(dataUser.child("Staff").getValue(String.class), context);
+                            getFormsFromFirebaseAndDoAction(action, context, activity);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
     // метод загружает данные о пользователе по логину и паролю
-    public void loadUserFromFirebaseAndDoAction(String enteredLogin, String enteredPassword, Action action, Context context, Activity activity)
+    public void loadUserFromFirebaseByLoginAndPasswordAndDoAction(String enteredLogin, String enteredPassword, Action action, Context context, Activity activity)
     {
         User result = null;
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Accounts");
@@ -286,7 +317,7 @@ public class User implements Serializable {
         }
     }
 
-    public void loadFiltersFromFirebase(Context context, Activity activity)
+    public void loadFiltersFromFirebase(Context context, Activity activity, Action action)
     {
         if(company != null && !company.isEmpty()) {
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference(company).child("Filters");
@@ -304,6 +335,7 @@ public class User implements Serializable {
                             }
                             save(context);
                         }
+                        action.run();
                     }
                 }
 
@@ -327,7 +359,6 @@ public class User implements Serializable {
 
     public void save(Context context)
     {
-        saveInFirebase(context);
         UsersDatabase usersDatabase;
         usersDatabase = new UsersDatabase(context);
         if(usersDatabase.hasUser(ID)) usersDatabase.update(User.this);
