@@ -165,14 +165,12 @@ public class Form implements Serializable {
                                         }
                                     }
                                 }
+                                int formIndex = getIndexOfFormInUserForms(context);
+                                CreatedFormsAdapter.userAnswerCount[formIndex]++;
                             }
                         }
                         Form.this.userAnswersCount = Form.this.userAnswers.size();
                         Form.this.save(context);
-                        // здесь начинается костыль
-                        int formIndex = getIndexOfFormInUserForms(context);
-                        if(formIndex != -1 && formIndex < CreatedFormsAdapter.userAnswerCount.length) CreatedFormsAdapter.userAnswerCount[formIndex] = Form.this.userAnswersCount;
-                        // здесь костыль заканчивается
                     }
                 }
 
