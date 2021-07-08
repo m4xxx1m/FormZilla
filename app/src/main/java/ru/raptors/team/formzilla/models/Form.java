@@ -105,8 +105,8 @@ public class Form implements Serializable {
             databaseReference = formReference.child("Status");
             FormStatus status = new FormStatus(FormStatusEnum.Available);
             databaseReference.setValue(status.toString());
-            for (int i = 0; i < questions.size(); i++) {
-                Question question = questions.get(i);
+            for(Question question : questions)
+            {
                 DatabaseReference questionReference = formReference.child("Questions").child(question.getID());
                 databaseReference = questionReference.child("Question");
                 databaseReference.setValue(question.question);
