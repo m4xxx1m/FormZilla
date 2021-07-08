@@ -48,6 +48,7 @@ public class Question implements Serializable {
         questionsDatabase = new QuestionsDatabase(context);
         if(questionsDatabase.hasQuestion(ID)) questionsDatabase.update(this);
         else questionsDatabase.insert(this);
+        questionsDatabase.close();
     }
 
     public static Question loadFromPhone(String ID, Context context)

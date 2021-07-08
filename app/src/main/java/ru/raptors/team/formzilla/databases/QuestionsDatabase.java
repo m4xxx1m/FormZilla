@@ -171,6 +171,11 @@ public class QuestionsDatabase implements Serializable {
         return result;
     }
 
+    public void close()
+    {
+        database.close();
+    }
+
     private class OpenHelper extends SQLiteOpenHelper implements Serializable {
 
         OpenHelper(Context context) {

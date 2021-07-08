@@ -200,6 +200,7 @@ public class Form implements Serializable {
         formsDatabase = new FormsDatabase(context);
         if(formsDatabase.hasForm(ID)) formsDatabase.update(this);
         else formsDatabase.insert(this);
+        formsDatabase.close();
         for(Question question : questions)
         {
             question.save(context);

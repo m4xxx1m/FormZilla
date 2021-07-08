@@ -112,7 +112,6 @@ public class User implements Serializable {
                             if (dataUser.hasChild("Company")) company = dataUser.child("Company").getValue(String.class);
                             if (dataUser.hasChild("CompanyID")) companyID = dataUser.child("CompanyID").getValue(String.class);
                             if (dataUser.hasChild("Staff")) unpackStaff(dataUser.child("Staff").getValue(String.class), context);
-                            getFormsFromFirebaseAndDoAction(null, context, activity);
                         }
                     }
                 }
@@ -142,7 +141,6 @@ public class User implements Serializable {
                             if (dataUser.hasChild("Company")) company = dataUser.child("Company").getValue(String.class);
                             if (dataUser.hasChild("CompanyID")) companyID = dataUser.child("CompanyID").getValue(String.class);
                             if (dataUser.hasChild("Staff")) unpackStaff(dataUser.child("Staff").getValue(String.class), context);
-                            getFormsFromFirebaseAndDoAction(action, context, activity);
                         }
                     }
                 }
@@ -187,7 +185,7 @@ public class User implements Serializable {
                                 if (dataUser.hasChild("Staff"))
                                     unpackStaff(dataUser.child("Staff").getValue(String.class), context);
                                 ID = dataUser.getKey();
-                                getFormsFromFirebaseAndDoAction(action, context, activity);
+                                if (action != null) action.run();
                             }
                         }
                     }
@@ -228,6 +226,7 @@ public class User implements Serializable {
                             if (existForm == null) {
                                 forms.add(form);
                             }
+                            else existForm.setStatus(form.getStatus());
                         }
                         save(context);
                     }
@@ -363,6 +362,7 @@ public class User implements Serializable {
         usersDatabase = new UsersDatabase(context);
         if(usersDatabase.hasUser(ID)) usersDatabase.update(User.this);
         else usersDatabase.insert(User.this);
+        usersDatabase.close();
         for(Form form : forms)
         {
             form.save(context);
